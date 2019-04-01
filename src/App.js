@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./Components/Home";
 import Auth from "./Components/Auth";
+import Consumer from "./Context/DataContext";
 
 class App extends Component {
   constructor(props) {
@@ -13,11 +14,14 @@ class App extends Component {
 
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" component={Auth} />
-        </Switch>
-      </BrowserRouter>
+      <Consumer>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" component={Auth} />
+            <Route path="/home" component={Home} />
+          </Switch>
+        </BrowserRouter>
+      </Consumer>
     );
   }
 }

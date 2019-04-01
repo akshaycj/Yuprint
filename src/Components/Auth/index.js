@@ -1,34 +1,61 @@
 import React, { Component } from "react";
 import "./index.css";
-import { Icon, message } from "antd";
+import { Icon, message, Spin } from "antd";
 import { provider, auth } from "./../../Utils/config";
+import { Consumer } from "../../Context/DataContext";
 
-export default class extends Component {
+export default props => (
+  <Consumer>
+    {({ user, setUser }) => <Auth {...props} user={user} setUser={setUser} />}
+  </Consumer>
+);
+
+export class Auth extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: false
+    };
   }
 
   componentDidMount() {
+    if (localStorage.getItem("sign") === "1") {
+      this.setState({ loading: true });
+    }
+
     auth.getRedirectResult().then(result => {
       console.log("result", result);
 
       if (result.user) {
-        message.success("Yayyy");
+        this.handleUserData(result.user);
       }
     });
   }
 
+  handleUserData = user => {
+    this.props.setUser(user);
+    localStorage.setItem("sign", "0");
+    this.setState({ loading: false });
+  };
+
   onSignIn = () => {
     auth.signInWithRedirect(provider);
+    localStorage.setItem("sign", "1");
   };
 
   render() {
+    const { loading } = this.state;
     return (
       <div className="auth-main">
         <div className="button" onClick={this.onSignIn}>
-          <Icon type="google" />
-          Sign In
+          {loading ? (
+            <Spin />
+          ) : (
+            <div>
+              <Icon type="google" />
+              Sign In
+            </div>
+          )}
         </div>
       </div>
     );
