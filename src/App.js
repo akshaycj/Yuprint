@@ -1,29 +1,23 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Home from "./Components/Home";
+import Auth from "./Components/Auth";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-constructor(props){
-  super(props)
-
-  
-}
-
-componentDidMount(){
-
-
-}
-
+  componentDidMount() {}
 
   render() {
-
-   
-
     return (
-      <div >
-
-      </div>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" component={Auth} />
+        </Switch>
+      </BrowserRouter>
     );
   }
 }
