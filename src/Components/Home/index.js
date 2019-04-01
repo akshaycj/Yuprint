@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 import { Icon } from "antd";
-export default class index extends Component {
+import { Consumer } from "../../Context/DataContext";
+
+export default props => (
+  <Consumer>{({ user }) => <Home {...props} user={user} />}</Consumer>
+);
+
+export class Home extends Component {
+  componentDidMount() {
+    console.log("props", this.props.user);
+  }
   render() {
     return (
       <div>

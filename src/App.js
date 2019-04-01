@@ -14,14 +14,14 @@ class App extends Component {
 
   render() {
     return (
-      <Consumer>
-        <BrowserRouter>
+      <BrowserRouter>
+        <Consumer>
           <Switch>
-            <Route path="/" component={Auth} />
-            <Route path="/home" component={Home} />
+            <Route path="/" exact component={Auth} />
+            <Route path="/home" exact component={Home} />
           </Switch>
-        </BrowserRouter>
-      </Consumer>
+        </Consumer>
+      </BrowserRouter>
     );
   }
 }

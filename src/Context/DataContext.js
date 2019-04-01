@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { auth } from "../Utils/config";
 
 const Context = React.createContext(null);
 
@@ -9,6 +10,14 @@ export default class Provider extends Component {
       user: []
     };
   }
+
+  //   componentDidMount() {
+  //     auth.onAuthStateChanged(user => {
+  //       if (user) {
+  //         this.setState({ user });
+  //       }
+  //     });
+  //   }
 
   setUser = user => {
     this.setState({ user });
