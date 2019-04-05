@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  width: 94%;
+  max-width: 360px;
+  flex-direction:column;
+
+}
+
+.login-form {
+
+}

@@ -62,7 +62,7 @@ export class Auth extends Component {
             </div>
           )}
         </div>
-        {redirect ? <Redirect to="/home" /> : null}
+        {redirect ? <Redirect to="/signup" /> : null}
       </div>
     );
   }
