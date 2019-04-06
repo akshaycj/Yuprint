@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { auth } from "../Utils/config";
 
 const Context = React.createContext(null);
 

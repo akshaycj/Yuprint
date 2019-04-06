@@ -46,7 +46,7 @@ class Otp extends Component {
 
   onSubmit = () => {
     var code = this.state.code;
-    if (code != "") {
+    if (code !== "") {
       this.setState({ spin: true });
       window.confirmationResult
         .confirm(code)

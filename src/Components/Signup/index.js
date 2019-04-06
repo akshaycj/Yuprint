@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Icon, Input, Button, InputNumber, Tooltip } from "antd";
+import { Icon, Input, Button, Tooltip } from "antd";
 import { Consumer } from "../../Context/DataContext";
 import "./index.css";
 import { Redirect } from "react-router-dom";
