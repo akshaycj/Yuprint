@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./index.css";
 import { Icon, Spin } from "antd";
-import { provider, auth } from "./../../Utils/config";
+import { provider, auth, db } from "./../../Utils/config";
 import { Consumer } from "../../Context/DataContext";
 import { Redirect } from "react-router-dom";
 
@@ -24,25 +24,41 @@ export class Auth extends Component {
   componentDidMount() {
     auth.onAuthStateChanged(user => {
       if (user) {
-        this.handleUserData(user, "/home");
+        this.handleUserData(user);
       }
     });
     if (localStorage.getItem("sign") === "1") {
       this.setState({ loading: true });
       auth.getRedirectResult().then(result => {
         if (result.user) {
-          this.handleUserData(result.user.user, "/signup");
+          this.handleUserData(result.user.user);
         }
       });
     }
   }
+  userExist = id => {
+    console.log("id", id);
 
-  handleUserData = (user, path) => {
-    this.setState({ loading: false, path });
+    db.ref("users")
+      .child(id)
+      .once("value", data => {
+        console.log("data", data);
+        var path = "/signup";
+        if (data) {
+          path = "/home";
+        }
+        this.setState({ path, redirect: true });
+      });
+  };
+
+  handleUserData = user => {
+    this.setState({ loading: false });
+
     if (user.email !== null) {
       this.props.setUser(user);
       localStorage.setItem("sign", "0");
-      this.setState({ redirect: true });
+
+      this.userExist(user.uid);
     }
   };
 
