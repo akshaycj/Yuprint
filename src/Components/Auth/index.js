@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./index.css";
-import { Icon, message, Spin } from "antd";
+import { Icon, Spin } from "antd";
 import { provider, auth } from "./../../Utils/config";
 import { Consumer } from "../../Context/DataContext";
 import { Redirect } from "react-router-dom";
@@ -16,31 +16,34 @@ export class Auth extends Component {
     super(props);
     this.state = {
       loading: false,
-      redirect: false
+      redirect: false,
+      path: "/signup"
     };
   }
 
   componentDidMount() {
     auth.onAuthStateChanged(user => {
       if (user) {
-        this.handleUserData(user);
+        this.handleUserData(user, "/home");
       }
     });
     if (localStorage.getItem("sign") === "1") {
       this.setState({ loading: true });
+      auth.getRedirectResult().then(result => {
+        if (result.user) {
+          this.handleUserData(result.user.user, "/signup");
+        }
+      });
     }
-
-    auth.getRedirectResult().then(result => {
-      if (result.user) {
-        this.handleUserData(result.user.user);
-      }
-    });
   }
 
-  handleUserData = user => {
-    this.props.setUser(user);
-    localStorage.setItem("sign", "0");
-    this.setState({ loading: false, redirect: true });
+  handleUserData = (user, path) => {
+    this.setState({ loading: false, path });
+    if (user.email !== null) {
+      this.props.setUser(user);
+      localStorage.setItem("sign", "0");
+      this.setState({ redirect: true });
+    }
   };
 
   onSignIn = () => {
@@ -49,9 +52,10 @@ export class Auth extends Component {
   };
 
   render() {
-    const { loading, redirect } = this.state;
+    var { loading, redirect, path } = this.state;
     return (
       <div className="auth-main">
+        {redirect ? <Redirect to={path} /> : null}
         <div className="button" onClick={this.onSignIn}>
           {loading ? (
             <Spin />
@@ -62,7 +66,6 @@ export class Auth extends Component {
             </div>
           )}
         </div>
-        {redirect ? <Redirect to="/signup" /> : null}
       </div>
     );
   }

@@ -8,12 +8,6 @@ import Signup from "./Components/Signup";
 import Otp from "./Components/Otp";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() { }
-
   render() {
     return (
       <BrowserRouter>

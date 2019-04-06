@@ -1,48 +1,49 @@
-.signUpMainDiv{
-  width : 100vw ;
-  display: flex ;
-  flex-direction: column ;
-  align-items: center ;
-  justify-content: center ;
-  background-image: linear-gradient(to bottom , #02aab0 ,  #00cdac) ;
+.signUpMainDiv {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(to bottom, #02aab0, #00cdac);
   font-family: "Raleway", sans-serif !important ;
 }
 
-.signUpMainDiv .input{
-  margin : 2vw 0vw ;
+.signUpMainDiv .input {
+  margin: 2vw 0vw;
+  width: 90vw;
 }
 
-.signUpMainDiv h1{
-  color: white ;
+.signUpMainDiv h1 {
+  color: white;
 }
 
-.signUpMainDiv .ant-btn-primary{
-    width: 50vw;
-    height: 11vw ;
-    font-size: 4vw;
-    border-radius: 7vw;
-    border: none;
-    padding: 1vw;
-    background-color: white ;
-    color: #00cdac;
-    margin: 2vw;
+.signUpMainDiv .ant-btn-primary {
+  width: 50vw;
+  height: 11vw;
+  font-size: 4vw;
+  border-radius: 7vw;
+  border: none;
+  padding: 1vw;
+  background-color: white;
+  color: #00cdac;
+  margin: 2vw;
 }
 
-.signUpMainDiv .ant-input{
-  border-radius: 7vw ;
+.signUpMainDiv .ant-input {
+  border-radius: 7vw;
 }
 
-.ant-input:hover{
+.ant-input:hover {
   border-color: white !important;
 }
 
-.signUpMainDiv .ant-input-affix-wrapper{
-    height: 15vw ;
-    font-size: 4vw;
-    font-weight: 300;
-    color: black;
-    margin: 1.5vw;
-    border: none;
-    border-radius: 2vw;
-    padding: 1vw;
+.signUpMainDiv .ant-input-affix-wrapper {
+  height: 15vw;
+  font-size: 4vw;
+  font-weight: 300;
+  color: black;
+  margin: 1.5vw;
+  border: none;
+  border-radius: 2vw;
+  padding: 1vw;
 }
