@@ -11,14 +11,6 @@ export default class Provider extends Component {
     };
   }
 
-  //   componentDidMount() {
-  //     auth.onAuthStateChanged(user => {
-  //       if (user) {
-  //         this.setState({ user });
-  //       }
-  //     });
-  //   }
-
   setUser = user => {
     this.setState({ user });
   };
