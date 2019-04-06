@@ -12,3 +12,10 @@
   margin-top: 8px;
   color: #666;
 }
+
+.list-item{
+  display:flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 200px
+}
