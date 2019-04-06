@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload, Icon,Button ,message,Select,List,Spin} from "antd";
+import { Upload,Icon,Button,message,Select,List,Spin} from "antd";
 import { Consumer } from "../../Context/DataContext";
 import "./index.css";
 
@@ -12,61 +12,45 @@ export class Home extends Component {
     super(props);
     this.state = {
       fileList: [],
-      isUploading:false
+      loading:false
     };
   }
   componentDidMount() {
     console.log("props", this.props.user);
   }
 
-  onChange=(info)=> {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-      info.fileList.map((item)=>{
-        if (info.file.uid===item.uid) {
-          item.paperSize='A4'
-        }
-      })
-      this.setState({fileList:info.fileList,isUploading:false})
-      console.log('state',this.state.fileList);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-      this.setState({isUploading:false})
-    }
+  handleUpload=()=>{
+    this.setState({loading:true})
+    setTimeout(()=>{
+      this.setState({loading:false,fileList:[]})
+      message.success('upload successful.');
+    },2000)
   }
-
   handleDelete=(index)=>{
     let fileList = this.state.fileList
     fileList.splice(index,1)
     this.setState({fileList})
   }
-  handleChange=(value,item)=>{
+  handleSizeChange=(value,item)=>{
     item.paperSize=value
-    console.log(this.state.fileList);
   }
+  beforeUpload=(file)=>{
+        this.setState(state => ({
+          fileList: [...state.fileList, file],
+        }));
+        return false;
+  }
+
   render() {
-    const props = {
-      name: 'file',
-      action: '//jsonplaceholder.typicode.com/posts/',
-      headers: {
-        authorization: 'authorization-text',
-      },
-      showUploadList:false,
-      multiple:true
-    };
-    const { fileList } = this.state;
+    const { fileList , isFile , loading} = this.state;
     const Option = Select.Option;
     return (
       <div className="home-main">
-        <Upload  {...props} onChange={this.onChange} beforeUpload={()=>this.setState({isUploading:true})}>
+        <Upload  showUploadList={false} multiple={true} beforeUpload={this.beforeUpload}>
           <Button>
-            <Icon type="upload" /> Click to Upload
+            <Icon type="upload" /> Click to Select Items
           </Button>
         </Upload>
-        {this.state.isUploading ?<Spin /> :null }
         <List
           className="demo-loadmore-list"
           itemLayout="horizontal"
@@ -74,7 +58,7 @@ export class Home extends Component {
           renderItem={(item,index) => (
             <List.Item className="list-item">
               <h4 style={{flex:2}}>{item.name}</h4>
-              <Select defaultValue="A4" style={{flex:1, width: 50,fontSize:12 }} onChange={(e)=>this.handleChange(e,item)}>
+              <Select defaultValue="A4" style={{flex:1, width: 50,fontSize:12 }} onChange={(e)=>this.handleSizeChange(e,item)}>
                 <Option value="A4">A4</Option>
                 <Option value="A3">A3</Option>
                 <Option value="A2">A2</Option>
@@ -85,6 +69,10 @@ export class Home extends Component {
             </List.Item>
           )}
         />
+        <Button type="primary" onClick={this.handleUpload} disabled={fileList.length ? false:true}>
+          Upload
+        </Button>
+        {loading ? <Spin /> : null}
       </div>
     );
   }
