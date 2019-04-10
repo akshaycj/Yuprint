@@ -13,7 +13,11 @@
   margin-top: 8px;
   color: #666;
 }
-
+.list-container{
+  margin-top: 5%;
+  height: 40%;
+  overflow-y: scroll;
+}
 .list-item{
   display:flex;
   align-items: center;

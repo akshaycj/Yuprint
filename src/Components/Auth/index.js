@@ -54,7 +54,8 @@ export class Auth extends Component {
   handleUserData = user => {
     this.setState({ loading: false });
 
-    if (user.email !== null) {
+    if (user.email ) {    //rafi edited
+      // if (user.email !== null) {
       this.props.setUser(user);
       localStorage.setItem("sign", "0");
 
