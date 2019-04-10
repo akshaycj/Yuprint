@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 .ant-upload-select-picture-card i {
   font-size: 32px;
@@ -11,4 +12,11 @@
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
+}
+
+.list-item{
+  display:flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 200px
 }
