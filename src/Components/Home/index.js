@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload,Icon,Button,message,Select,List,Spin} from "antd";
+import { Upload,Icon,Input,Button,message,Select,List,Spin} from "antd";
 import { Consumer } from "../../Context/DataContext";
 import "./index.css";
 
@@ -14,6 +14,11 @@ export class Home extends Component {
       fileList: [],
       loading:false
     };
+    this.data={
+      desc:this.state.description,
+      user:this.props.user.id,
+
+    }
   }
   componentDidMount() {
     console.log("props", this.props.user);
@@ -22,6 +27,7 @@ export class Home extends Component {
   handleUpload=()=>{
     this.setState({loading:true})
     setTimeout(()=>{
+      console.log(this.state.fileList);
       this.setState({loading:false,fileList:[]})
       message.success('upload successful.');
     },2000)
@@ -35,15 +41,22 @@ export class Home extends Component {
     item.paperSize=value
   }
   beforeUpload=(file)=>{
+    // if (file.type != "image/jpeg") {
+    // message.error('You can only upload JPG file!');
+    // return false;
+    // }
         this.setState(state => ({
           fileList: [...state.fileList, file],
         }));
         return false;
   }
-
+  handleDescriptionChange=(e)=>{
+    this.setState({description:e.target.value})
+  }
   render() {
     const { fileList , isFile , loading} = this.state;
     const Option = Select.Option;
+    const {TextArea}=Input
     return (
       <div className="home-main">
         <Upload  showUploadList={false} multiple={true} beforeUpload={this.beforeUpload}>
@@ -69,6 +82,9 @@ export class Home extends Component {
             </List.Item>
           )}
         />
+        <TextArea rows={4}  style={{marginBottom:20}}
+          placeholder='description ...' value={this.state.description}
+          onChange={this.handleDescriptionChange}/>
         <Button type="primary" onClick={this.handleUpload} disabled={fileList.length ? false:true}>
           Upload
         </Button>
