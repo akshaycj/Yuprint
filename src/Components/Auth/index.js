@@ -31,7 +31,8 @@ export class Auth extends Component {
       this.setState({ loading: true });
       auth.getRedirectResult().then(result => {
         if (result.user) {
-          this.handleUserData(result.user.user);
+          this.handleUserData(result.user); //rafi edited
+          // this.handleUserData(result.user.user);
         }
       });
     }
