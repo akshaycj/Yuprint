@@ -3,6 +3,7 @@ import { Icon, Input, Button, Tooltip } from "antd";
 import { Consumer } from "../../Context/DataContext";
 import "./index.css";
 import { Redirect } from "react-router-dom";
+import logo from "../../Res/logo.svg";
 
 export default props => (
   <Consumer>
@@ -58,9 +59,10 @@ class Signup extends Component {
 
   render() {
     return (
-      <div className="signUpMainDiv">
+      <div className="signUpMainDiv grad-back">
+        <img src={logo} style={{ marginBottom: 45 }} />
         {this.state.redirect ? <Redirect to="/otp" /> : null}
-        <h1>Sign Up</h1>
+
         <Input
           className="input"
           placeholder="Name"

@@ -1,20 +1,41 @@
 .auth-main {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+
   height: 100%;
+  width: 100%;
+  flex-direction: column;
 }
 
 .auth-main > .button {
   align-self: center;
   border-radius: 30px;
-  width: 200px;
+  width: 50px;
   height: 50px;
   display: flex;
   justify-content: center;
-
   align-items: center;
   color: white;
+  font-size: 18px;
   cursor: pointer;
-  background-color: #0093e9;
-  background-image: linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
+  position: relative;
+  margin-top: -10px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+/* .auth-main > .button::before {
+  content: " ";
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: auto;
+  right: -15px;
+  top: 34%;
+  bottom: auto;
+  border: 8px solid;
+  border-color: transparent transparent transparent #fff;
+
+} */
+
+.btn-border {
+  border: solid 1px #4776e6;
 }
