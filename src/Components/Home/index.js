@@ -13,7 +13,7 @@ export default class Home extends Component {
   render() {
     const TabPane = Tabs.TabPane
     return (
-      <Tabs defaultActiveKey="1" >
+      <Tabs defaultActiveKey="1"  className="container">
         <TabPane tab="Tab 1" key="1"><UploadHome /></TabPane>
         <TabPane tab="Tab 2" key="2"><ContentCreator /></TabPane>
       </Tabs>

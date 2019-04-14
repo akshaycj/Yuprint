@@ -43,23 +43,21 @@ export default props => (
       return uploadFile;
     })
     Promise.all(storeFileStorage).then(()=> {
-      let data={
+      db.ref('store').child('orders').child('active').push({
         description:this.state.description,
         user:this.props.user.uid||'test user',
         mobile:this.props.user.phoneNumber||'test mobileNo',
         timestamp:new Date().toISOString(),
         urls:this.state.urls,
         status:'active'
-      }
-      console.log('data',data);
-      db.ref('store').child('orders').child('active').set({data},(err)=>{
-        this.setState({loading:false,fileList:[]})
+      },(err)=>{
         if (err) {
           message.error('upload failed.')
         }
         else {
           message.success('upload successful')
         }
+        this.setState({loading:false,fileList:[],description:''})
       })
     })
   }
@@ -125,7 +123,12 @@ export default props => (
         <Button type="primary" onClick={this.handleUpload} disabled={fileList.length ? false:true}>
           Upload
         </Button>
-        {loading ? <Spin /> : null}
+        {loading ?
+           <div className="loading-indicator">
+             <Spin size='large'/>
+             <h3 style={{color:'red'}}>Uploading ....</h3>
+           </div>
+        : null}
       </div>
     );
   }

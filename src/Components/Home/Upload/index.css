@@ -25,3 +25,12 @@
   width: 200px;
   overflow-x: auto;
 }
+.loading-indicator{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
