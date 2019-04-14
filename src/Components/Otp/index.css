@@ -1,49 +1,47 @@
-.otpMainDiv{
-    width : 100vw ;
-  display: flex ;
-  flex-direction: column ;
-  align-items: center ;
-  justify-content: center ;
-  background-image: linear-gradient(to bottom , #02aab0 ,  #00cdac) ;
+.otpMainDiv {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   font-family: "Raleway", sans-serif !important ;
 }
 
-
-.otpMainDiv .input{
-    margin : 2vw 0vw ;
-  }
-
-  .otpMainDiv h1{
-    color: white ;
-  }
-
-  .otpMainDiv .ant-btn-primary{
-    width: 50vw;
-    height: 11vw ;
-    font-size: 4vw;
-    border-radius: 7vw;
-    border: none;
-    padding: 1vw;
-    background-color: white ;
-    color: #00cdac;
-    margin: 2vw;
+.otpMainDiv .input {
+  margin: 2vw 0vw;
 }
 
-.otpMainDiv .ant-input{
-    border-radius: 7vw ;
-  }
-  
-  .ant-input:hover{
-    border-color: white !important;
-  }
+.otpMainDiv h1 {
+  color: white;
+}
 
-  .otpMainDiv .ant-input-affix-wrapper{
-    height: 15vw ;
-    font-size: 4vw;
-    font-weight: 300;
-    color: black;
-    margin: 1.5vw;
-    border: none;
-    border-radius: 2vw;
-    padding: 1vw;
+.otpMainDiv .ant-btn-primary {
+  width: 50vw;
+  height: 11vw;
+  font-size: 4vw;
+  border-radius: 7vw;
+  border: none;
+  padding: 1vw;
+  background-color: white;
+  color: #00cdac;
+  margin: 2vw;
+}
+
+.otpMainDiv .ant-input {
+  border-radius: 7vw;
+}
+
+.ant-input:hover {
+  border-color: white !important;
+}
+
+.otpMainDiv .ant-input-affix-wrapper {
+  height: 15vw;
+  font-size: 4vw;
+  font-weight: 300;
+  color: black;
+  margin: 1.5vw;
+  border: none;
+  border-radius: 2vw;
+  padding: 1vw;
 }

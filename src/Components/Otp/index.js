@@ -99,8 +99,8 @@ class Otp extends Component {
   render() {
     const { spin, redirect } = this.state;
     return (
-      <div className="otpMainDiv">
-        <h1>Enter Otp</h1>
+      <div className="otpMainDiv grad-back">
+        <h1>Enter OTP</h1>
         <div id="recaptcha-container" />
         <Input
           style={{ width: "90vw", height: "6.5vh" }}
