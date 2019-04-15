@@ -4,6 +4,7 @@ import "./index.css";
 import UploadHome from "./Upload";
 import ContentCreator from "./ContentCreator";
 import logo from "../../Res/logo.svg";
+import UploadButton from "./UploadButton/index";
 
 export default class Home extends Component {
   constructor(props) {
@@ -62,7 +63,9 @@ export default class Home extends Component {
           renderTabBar={() => <div />}
           className="container"
         >
-          <TabPane tab="Tab 1" key="print" />
+          <TabPane tab="Tab 1" key="print">
+            <UploadButton />
+          </TabPane>
           <TabPane tab="Tab 2" key="content">
             <UploadHome />
           </TabPane>

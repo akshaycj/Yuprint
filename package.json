@@ -7,6 +7,8 @@
     "babel-plugin-import": "^1.11.0",
     "customize-cra": "^0.2.12",
     "firebase": "^5.9.2",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
     "rc-tween-one": "^2.4.0",
     "react": "^16.8.4",
     "react-app-rewired": "^2.1.1",
