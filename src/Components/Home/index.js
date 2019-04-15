@@ -1,22 +1,76 @@
 import React, { Component } from "react";
-import { Upload,Icon,Input,Button,message,Select,List,Spin,Tabs} from "antd";
-import { Consumer } from "../../Context/DataContext";
-import { storage,db } from "./../../Utils/config";
+import { Tabs, Input, Icon } from "antd";
 import "./index.css";
-import UploadHome from './Upload'
-import ContentCreator from './ContentCreator'
+import UploadHome from "./Upload";
+import ContentCreator from "./ContentCreator";
+import logo from "../../Res/logo.svg";
 
 export default class Home extends Component {
   constructor(props) {
-    super()
+    super(props);
+    this.state = {
+      active: "print"
+    };
   }
+  componentDidMount = () => {
+    this.setElementStyle("print");
+  };
+  onTabItemClick = e => {
+    var active = e.target.id;
+    this.setState({ active });
+    this.setElementStyle(active);
+  };
+  setElementStyle = active => {
+    var tabs = ["print", "content", "upload"];
+    tabs.map(item => {
+      var el = document.getElementById(item);
+      if (item === active) {
+        el.setAttribute("style", "font-weight:bold;color:white");
+      } else {
+        el.removeAttribute("style");
+      }
+    });
+  };
   render() {
-    const TabPane = Tabs.TabPane
+    const TabPane = Tabs.TabPane;
+    const { active } = this.state;
     return (
-      <Tabs defaultActiveKey="1"  className="container">
-        <TabPane tab="Tab 1" key="1"><UploadHome /></TabPane>
-        <TabPane tab="Tab 2" key="2"><ContentCreator /></TabPane>
-      </Tabs>
+      <div className="main-container">
+        <div className="tab-header grad-back">
+          <div className="logo-container">
+            <img src={logo} />
+          </div>
+          <div className="navbar">
+            <span id="print" onClick={this.onTabItemClick}>
+              Print
+            </span>
+            <span id="content" onClick={this.onTabItemClick}>
+              Content
+            </span>
+            <span id="upload" onClick={this.onTabItemClick}>
+              Upload
+            </span>
+          </div>
+        </div>
+        <div className="search-container">
+          <Input />
+          <Icon type="search" />
+        </div>
+        <Tabs
+          defaultActiveKey="print"
+          activeKey={active}
+          renderTabBar={() => <div />}
+          className="container"
+        >
+          <TabPane tab="Tab 1" key="print" />
+          <TabPane tab="Tab 2" key="content">
+            <UploadHome />
+          </TabPane>
+          <TabPane tab="Tab 2" key="upload">
+            <ContentCreator />
+          </TabPane>
+        </Tabs>
+      </div>
     );
   }
 }
