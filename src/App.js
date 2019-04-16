@@ -6,6 +6,7 @@ import Auth from "./Components/Auth";
 import Consumer from "./Context/DataContext";
 import Signup from "./Components/Signup";
 import Otp from "./Components/Otp";
+import SinglePage from "./Components/SinglePage";
 
 class App extends Component {
   render() {
@@ -17,6 +18,7 @@ class App extends Component {
             <Route path="/home" exact component={Home} />
             <Route path="/signup" exact component={Signup} />
             <Route path="/otp" exact component={Otp} />
+            <Route path="/singlepage" exact component={SinglePage} />
           </Switch>
         </Consumer>
       </BrowserRouter>

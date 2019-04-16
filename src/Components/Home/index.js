@@ -3,6 +3,7 @@ import { Tabs, Input, Icon } from "antd";
 import "./index.css";
 import UploadHome from "./Upload";
 import ContentCreator from "./ContentCreator";
+import ContentFeed from './ContentFeed'
 import logo from "../../Res/logo.svg";
 import UploadButton from "./UploadButton/index";
 
@@ -67,7 +68,7 @@ export default class Home extends Component {
             <UploadHome />
           </TabPane>
           <TabPane tab="Tab 2" key="content">
-            Coming Soon
+            <ContentFeed />
           </TabPane>
           <TabPane tab="Tab 2" key="upload">
             <ContentCreator />
