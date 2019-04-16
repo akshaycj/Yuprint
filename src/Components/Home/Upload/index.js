@@ -135,7 +135,7 @@ class UploadHome extends Component {
     this.setState({ description: e.target.value });
   };
   render() {
-    const { fileList, isFile, loading } = this.state;
+    const { fileList, loading } = this.state;
     const Option = Select.Option;
     const { TextArea } = Input;
     return (
@@ -147,6 +147,7 @@ class UploadHome extends Component {
         >
           <UploadButton />
         </Upload>
+        {/* <WaterWave height={161} title="Progress" percent={64} /> */}
         <div className="list-container">
           <List
             className="list"
