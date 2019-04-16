@@ -1,18 +1,14 @@
 import React, { Component } from "react";
-import {
-  Upload,
-  Icon,
-  Input,
-  Button,
-  message,
-  Select,
-  List,
-  Spin,
-  Tabs
-} from "antd";
+import { Upload, Input, Button, message } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
+import UploadButton from "./../UploadButton/index";
+import ProgressIndicator from "./ProgressIndicator";
+import UploadList from "./UploadList";
+import loadingIcon from "../../../Res/ball-triangle.svg";
+
+const Fragment = React.Fragment;
 
 export default props => (
   <Consumer>{({ user }) => <UploadHome {...props} user={user} />}</Consumer>
@@ -25,7 +21,12 @@ class UploadHome extends Component {
       fileList: [],
       description: "",
       loading: false,
-      urls: []
+      urls: [],
+      pending: 0,
+      completed: 0,
+      progress: 0,
+      id: this.props.user.uid || "test user id",
+      onNext: false
     };
   }
   componentDidMount() {
@@ -33,49 +34,70 @@ class UploadHome extends Component {
   }
 
   handleUpload = () => {
-    this.setState({ loading: true });
-    let id = this.props.user.id || "test user id";
-    let urls = this.state.urls;
-    let storeFileStorage = this.state.fileList.map((item, index) => {
+    var { id, fileList, completed } = this.state;
+    this.setState({ loading: true, pending: fileList.length });
+
+    var that = this;
+    let storeFileStorage = fileList.map((item, index) => {
       let uploadFile = storage
         .ref("files")
         .child("users")
         .child(id)
         .child(item.name)
         .put(item);
+
       uploadFile.on(
         "state_changed",
         function(snapshot) {
-          console.log("snapshot", snapshot);
+          var progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+
+          console.log("progress", progress);
+
+          that.setState({ progress });
         },
         function(error) {
           console.error("Something nasty happened", error);
         },
         () => {
-          let location = uploadFile.snapshot.ref.location.bucket;
-          var path = uploadFile.snapshot.ref.location.path;
-          let downloadURL = location + "/" + path;
-          let urls = this.state.urls;
-          urls[index] = {
-            urls: downloadURL,
-            type: item.paperSize
-          };
-          this.setState({ urls });
+          //--> Valanj mook pididkal Detected!!
+
+          // let location = uploadFile.snapshot.ref.location.bucket;
+          // var path = uploadFile.snapshot.ref.location.path;
+          // let downloadURL = location + "/" + path;
+          // let urls = this.state.urls;
+          // urls[index] = {
+          //   urls: downloadURL,
+          //   type: item.paperSize
+          // };
+          // this.setState({ urls });
+
+          uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            let urls = that.state.urls;
+            urls[index] = {
+              urls: downloadURL,
+              type: item.paperSize
+            };
+            completed = completed + 1;
+            that.setState({ urls, completed });
+          });
         }
       );
       return uploadFile;
     });
     Promise.all(storeFileStorage).then(() => {
+      var { description, id, urls } = this.state;
       db.ref("store")
         .child("orders")
         .child("active")
         .push(
           {
-            description: this.state.description,
-            user: this.props.user.uid || "test user",
+            description: description,
+            user: id || "test user",
             mobile: this.props.user.phoneNumber || "test mobileNo",
             timestamp: new Date().toISOString(),
-            urls: this.state.urls,
+            urls: urls,
             status: "active"
           },
           err => {
@@ -123,71 +145,94 @@ class UploadHome extends Component {
     this.setState({ description: e.target.value });
   };
   render() {
-    const { fileList, isFile, loading } = this.state;
-    const Option = Select.Option;
+    const {
+      fileList,
+      loading,
+      progress,
+      pending,
+      completed,
+      onNext
+    } = this.state;
+
     const { TextArea } = Input;
     return (
       <div className="home-main">
-        <Upload
-          showUploadList={false}
-          multiple={true}
-          beforeUpload={this.beforeUpload}
-        >
-          <p className="ant-upload-drag-icon">
-            <Icon type="inbox" />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-        </Upload>
-        <div className="list-container">
-          <List
-            className="list"
-            itemLayout="horizontal"
-            dataSource={fileList}
-            renderItem={(item, index) => (
-              <List.Item className="list-item">
-                <h4 style={{ flex: 2 }}>{item.name}</h4>
-                <Select
-                  defaultValue="A4"
-                  style={{ flex: 1, width: 50, fontSize: 12 }}
-                  onChange={e => this.handleSizeChange(e, item)}
-                >
-                  <Option value="A4">A4</Option>
-                  <Option value="A3">A3</Option>
-                  <Option value="A2">A2</Option>
-                </Select>
-                <Button
-                  style={{ flex: 1 }}
-                  type="danger"
-                  onClick={() => this.handleDelete(index)}
-                >
-                  <Icon type="delete" />
-                </Button>
-              </List.Item>
+        {loading ? (
+          <Fragment>
+            <img src={loadingIcon} />
+            <ProgressIndicator
+              progress={progress}
+              completed={completed}
+              pending={pending}
+            />
+          </Fragment>
+        ) : (
+          <Fragment>
+            {fileList.length === 0 ? (
+              <Upload
+                showUploadList={false}
+                multiple={true}
+                beforeUpload={this.beforeUpload}
+              >
+                <UploadButton />
+              </Upload>
+            ) : (
+              <Fragment>
+                {onNext ? (
+                  <Fragment>
+                    <div className="upload-button-group">
+                      <div
+                        className="upload-button upload-button-border"
+                        onClick={() => {
+                          this.setState({ onNext: false });
+                        }}
+                      >
+                        Prev
+                      </div>{" "}
+                      <div
+                        className="upload-button upload-button-back"
+                        onClick={this.handleUpload}
+                      >
+                        Done
+                      </div>
+                    </div>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <UploadList
+                      fileList={fileList}
+                      handleSizeChange={this.handleSizeChange}
+                      handleDelete={this.handleDelete}
+                    />
+                    <TextArea
+                      rows={4}
+                      style={{ marginBottom: 20 }}
+                      placeholder="Printing instructions"
+                      value={this.state.description}
+                      onChange={this.handleDescriptionChange}
+                    />
+                    <div
+                      className="upload-button upload-button-border"
+                      onClick={() => {
+                        this.setState({ onNext: true });
+                      }}
+                    >
+                      Next
+                    </div>
+                  </Fragment>
+                )}
+              </Fragment>
             )}
-          />
-        </div>
-        <TextArea
-          rows={4}
-          style={{ marginBottom: 20 }}
-          placeholder="description ..."
-          value={this.state.description}
-          onChange={this.handleDescriptionChange}
-        />
-        <Button
+          </Fragment>
+        )}
+
+        {/* <Button
           type="primary"
           onClick={this.handleUpload}
           disabled={fileList.length ? false : true}
         >
           Upload
-        </Button>
-        {loading ? (
-          <div className="loading-indicator">
-            <Spin size="large" />
-            <h3 style={{ color: "red" }}>Uploading ....</h3>
-          </div>
-        ) : null}
+        </Button> */}
       </div>
     );
   }

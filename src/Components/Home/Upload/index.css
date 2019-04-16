@@ -3,8 +3,36 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
-  height: 100%;
+  min-height: 100%;
+  height: auto;
+  overflow-y: auto;
+  justify-content: space-evenly;
+}
+
+.upload-button-group {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+.upload-button {
+  padding: 5px;
+  width: 120px;
+
+  border-radius: 18px;
+  height: 35px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.upload-button-back {
+  background: #13c2c2;
+  color: white;
+}
+.upload-button-border {
+  border: solid 1px #13c2c2;
+  color: #13c2c2;
 }
 .ant-upload-select-picture-card i {
   font-size: 32px;
@@ -16,16 +44,14 @@
   color: #666;
 }
 .list-container {
-  margin-top: 5%;
-  height: 40%;
-  overflow-y: scroll;
+  width: 100%;
+  margin: 10x;
 }
 .list-item {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 200px;
-  overflow-x: auto;
+  width: 100%;
 }
 .loading-indicator {
   display: flex;

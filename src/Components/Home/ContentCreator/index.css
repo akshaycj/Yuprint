@@ -1,9 +1,8 @@
-.home-main {
+.content-creator-main {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
 }
 .ant-upload-select-picture-card i {
   font-size: 32px;
@@ -14,20 +13,20 @@
   margin-top: 8px;
   color: #666;
 }
-.list-container{
+/* .list-container {
   margin-top: 5%;
   height: 40%;
   overflow-y: scroll;
 }
-.list-item{
-  display:flex;
+.list-item {
+  display: flex;
   align-items: center;
   justify-content: space-around;
   width: 200px;
   overflow-x: auto;
-}
+} */
 
-.loading-indicator{
+.loading-indicator {
   display: flex;
   flex-direction: column;
   align-items: center;
