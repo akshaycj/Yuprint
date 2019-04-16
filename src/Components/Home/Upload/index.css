@@ -9,6 +9,12 @@
   justify-content: space-evenly;
 }
 
+.map-content {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
 .upload-button-group {
   display: flex;
   justify-content: space-around;

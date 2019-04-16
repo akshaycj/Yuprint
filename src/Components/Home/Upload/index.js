@@ -180,6 +180,9 @@ class UploadHome extends Component {
               <Fragment>
                 {onNext ? (
                   <Fragment>
+                    <div className="map-content">
+                      Map Content under development
+                    </div>
                     <div className="upload-button-group">
                       <div
                         className="upload-button upload-button-border"

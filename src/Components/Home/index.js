@@ -64,10 +64,10 @@ export default class Home extends Component {
           className="container"
         >
           <TabPane tab="Tab 1" key="print">
-            <UploadButton />
+            <UploadHome />
           </TabPane>
           <TabPane tab="Tab 2" key="content">
-            <UploadHome />
+            Coming Soon
           </TabPane>
           <TabPane tab="Tab 2" key="upload">
             <ContentCreator />
