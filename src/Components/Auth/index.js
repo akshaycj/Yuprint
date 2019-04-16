@@ -86,7 +86,7 @@ export class Auth extends Component {
             alignItems: "center"
           }}
         >
-          <img src={logo} style={{ width: 200, alignSelf: "center" }} />
+          <img src={logo} alt='logo' style={{ width: 200, alignSelf: "center" }} />
           <h3 style={{ color: "rgba(0, 0, 0, 0.65)", marginTop: 5 }}>
             You Print - We Deliver
           </h3>

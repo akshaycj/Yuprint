@@ -8,7 +8,6 @@ import {
   Select,
   List,
   Spin,
-  Tabs,
   Tag
 } from "antd";
 import { TweenOneGroup } from "rc-tween-one";
@@ -164,10 +163,10 @@ class ContentCreator extends Component {
     );
   };
   render() {
-    const { fileList, isFile, loading } = this.state;
+    const { fileList, loading } = this.state;
     const Option = Select.Option;
     const { TextArea } = Input;
-    const { tags, inputVisible, inputValue, title } = this.state;
+    const { tags, inputVisible, inputValue, title,description } = this.state;
     const tagChild = tags.map(this.forMap);
     return (
       <div className="content-creator-main">
@@ -211,14 +210,14 @@ class ContentCreator extends Component {
         <Input
           placeholder="title"
           style={{ marginBottom: "5%" }}
-          value={this.state.title}
+          value={title}
           onChange={this.handleTitleChange}
         />
         <TextArea
           rows={4}
           style={{ marginBottom: 20 }}
           placeholder="description ..."
-          value={this.state.description}
+          value={description}
           onChange={this.handleDescriptionChange}
         />
         <div style={{ marginBottom: 16 }}>

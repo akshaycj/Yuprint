@@ -4,7 +4,6 @@ import "./index.css";
 import UploadHome from "./Upload";
 import ContentCreator from "./ContentCreator";
 import logo from "../../Res/logo.svg";
-import UploadButton from "./UploadButton/index";
 
 export default class Home extends Component {
   constructor(props) {
@@ -30,6 +29,7 @@ export default class Home extends Component {
       } else {
         el.removeAttribute("style");
       }
+      return true;
     });
   };
   render() {
@@ -39,7 +39,7 @@ export default class Home extends Component {
       <div className="main-container">
         <div className="tab-header grad-back">
           <div className="logo-container">
-            <img src={logo} />
+            <img src={logo} alt="logo" />
           </div>
           <div className="navbar">
             <span id="print" onClick={this.onTabItemClick}>
