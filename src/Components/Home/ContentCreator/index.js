@@ -170,7 +170,7 @@ class ContentCreator extends Component {
     const { tags, inputVisible, inputValue, title } = this.state;
     const tagChild = tags.map(this.forMap);
     return (
-      <div className="home-main">
+      <div className="content-creator-main">
         <Upload
           showUploadList={false}
           multiple={true}

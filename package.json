@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "ant-design-pro": "^2.3.1",
-    "antd": "^3.15.1",
+    "antd": "^3.16.3",
     "babel-plugin-import": "^1.11.0",
     "customize-cra": "^0.2.12",
     "firebase": "^5.9.2",
