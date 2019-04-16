@@ -60,7 +60,7 @@ class Signup extends Component {
   render() {
     return (
       <div className="signUpMainDiv grad-back">
-        <img src={logo} style={{ marginBottom: 45 }} />
+        <img src={logo} alt="logo" style={{ marginBottom: 45 }} />
         {this.state.redirect ? <Redirect to="/otp" /> : null}
 
         <Input

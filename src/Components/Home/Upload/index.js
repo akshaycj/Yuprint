@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload, Input, Button, message } from "antd";
+import { Upload, Input, message } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
@@ -159,7 +159,7 @@ class UploadHome extends Component {
       <div className="home-main">
         {loading ? (
           <Fragment>
-            <img src={loadingIcon} />
+            <img src={loadingIcon} alt="loading" />
             <ProgressIndicator
               progress={progress}
               completed={completed}
