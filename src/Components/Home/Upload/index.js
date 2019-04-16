@@ -1,15 +1,5 @@
 import React, { Component } from "react";
-import {
-  Upload,
-  Icon,
-  Input,
-  Button,
-  message,
-  Select,
-  List,
-  Spin,
-  Tabs
-} from "antd";
+import { Upload, Icon, Input, Button, message, Select, List, Spin } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
@@ -26,7 +16,11 @@ class UploadHome extends Component {
       fileList: [],
       description: "",
       loading: false,
-      urls: []
+      urls: [],
+      pending: 0,
+      completed: 0,
+      progress: 0,
+      id: this.props.user.uid || "test user id"
     };
   }
   componentDidMount() {
@@ -34,28 +28,31 @@ class UploadHome extends Component {
   }
 
   handleUpload = () => {
-    this.setState({ loading: true });
-    let id = this.props.user.uid || "test user id";
-    let urls = this.state.urls;
+    var { id, fileList, completed } = this.state;
+    this.setState({ loading: true, pending: fileList.length });
+
     var that = this;
-    let storeFileStorage = this.state.fileList.map((item, index) => {
+    let storeFileStorage = fileList.map((item, index) => {
       let uploadFile = storage
         .ref("files")
         .child("users")
         .child(id)
         .child(item.name)
         .put(item);
+
       uploadFile.on(
         "state_changed",
         function(snapshot) {
-          console.log("snapshot", snapshot);
           var progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          that.setState({ progress });
         },
         function(error) {
           console.error("Something nasty happened", error);
         },
         () => {
+          //--> Valanj mook pididkal Detected!!
+
           // let location = uploadFile.snapshot.ref.location.bucket;
           // var path = uploadFile.snapshot.ref.location.path;
           // let downloadURL = location + "/" + path;
@@ -65,29 +62,32 @@ class UploadHome extends Component {
           //   type: item.paperSize
           // };
           // this.setState({ urls });
+
           uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
             let urls = that.state.urls;
             urls[index] = {
               urls: downloadURL,
               type: item.paperSize
             };
-            that.setState({ urls });
+            completed = completed + 1;
+            that.setState({ urls, completed });
           });
         }
       );
       return uploadFile;
     });
     Promise.all(storeFileStorage).then(() => {
+      var { description, id, urls } = this.state;
       db.ref("store")
         .child("orders")
         .child("active")
         .push(
           {
-            description: this.state.description,
-            user: this.props.user.uid || "test user",
+            description: description,
+            user: id || "test user",
             mobile: this.props.user.phoneNumber || "test mobileNo",
             timestamp: new Date().toISOString(),
-            urls: this.state.urls,
+            urls: urls,
             status: "active"
           },
           err => {
