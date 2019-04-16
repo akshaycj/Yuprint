@@ -56,14 +56,6 @@ class UploadHome extends Component {
           console.error("Something nasty happened", error);
         },
         () => {
-          uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            let urls = that.state.urls;
-            urls[index] = {
-              urls: downloadURL,
-              type: item.paperSize
-            };
-            that.setState({ urls });
-          });
           // let location = uploadFile.snapshot.ref.location.bucket;
           // var path = uploadFile.snapshot.ref.location.path;
           // let downloadURL = location + "/" + path;
@@ -73,6 +65,14 @@ class UploadHome extends Component {
           //   type: item.paperSize
           // };
           // this.setState({ urls });
+          uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            let urls = that.state.urls;
+            urls[index] = {
+              urls: downloadURL,
+              type: item.paperSize
+            };
+            that.setState({ urls });
+          });
         }
       );
       return uploadFile;
