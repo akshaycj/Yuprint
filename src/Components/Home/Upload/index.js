@@ -13,6 +13,7 @@ import {
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
+import UploadButton from "./../UploadButton/index";
 
 export default props => (
   <Consumer>{({ user }) => <UploadHome {...props} user={user} />}</Consumer>
@@ -34,8 +35,9 @@ class UploadHome extends Component {
 
   handleUpload = () => {
     this.setState({ loading: true });
-    let id = this.props.user.id || "test user id";
+    let id = this.props.user.uid || "test user id";
     let urls = this.state.urls;
+    var that = this;
     let storeFileStorage = this.state.fileList.map((item, index) => {
       let uploadFile = storage
         .ref("files")
@@ -47,20 +49,30 @@ class UploadHome extends Component {
         "state_changed",
         function(snapshot) {
           console.log("snapshot", snapshot);
+          var progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         function(error) {
           console.error("Something nasty happened", error);
         },
         () => {
-          let location = uploadFile.snapshot.ref.location.bucket;
-          var path = uploadFile.snapshot.ref.location.path;
-          let downloadURL = location + "/" + path;
-          let urls = this.state.urls;
-          urls[index] = {
-            urls: downloadURL,
-            type: item.paperSize
-          };
-          this.setState({ urls });
+          uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            let urls = that.state.urls;
+            urls[index] = {
+              urls: downloadURL,
+              type: item.paperSize
+            };
+            that.setState({ urls });
+          });
+          // let location = uploadFile.snapshot.ref.location.bucket;
+          // var path = uploadFile.snapshot.ref.location.path;
+          // let downloadURL = location + "/" + path;
+          // let urls = this.state.urls;
+          // urls[index] = {
+          //   urls: downloadURL,
+          //   type: item.paperSize
+          // };
+          // this.setState({ urls });
         }
       );
       return uploadFile;
@@ -133,12 +145,7 @@ class UploadHome extends Component {
           multiple={true}
           beforeUpload={this.beforeUpload}
         >
-          <p className="ant-upload-drag-icon">
-            <Icon type="inbox" />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
+          <UploadButton />
         </Upload>
         <div className="list-container">
           <List
