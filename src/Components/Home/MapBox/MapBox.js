@@ -35,9 +35,14 @@ class MapBox extends Component {
       .addTo(this.map);
     const onDragEnd = () => {
       let lngLat = marker.getLngLat();
-      this.setState({
-        position: { lng: lngLat.lng, lat: lngLat.lat }
-      });
+      this.setState(
+        {
+          position: { lng: lngLat.lng, lat: lngLat.lat }
+        },
+        () => {
+          this.props.setGeoPosition(this.state.position);
+        }
+      );
     };
     marker.on("dragend", onDragEnd);
 
@@ -54,17 +59,27 @@ class MapBox extends Component {
     });
     geolocate.on("geolocate", data => {
       marker.setLngLat([data.coords.longitude, data.coords.latitude]);
-      this.setState({
-        position: { lng: data.coords.longitude, lat: data.coords.latitude }
-      });
+      this.setState(
+        {
+          position: { lng: data.coords.longitude, lat: data.coords.latitude }
+        },
+        () => {
+          this.props.setGeoPosition(this.state.position);
+        }
+      );
     });
 
     // On Click
     this.map.on("click", data => {
       marker.setLngLat([data.lngLat.lng, data.lngLat.lat]);
-      this.setState({
-        position: { lng: data.lngLat.lng, lat: data.lngLat.lat }
-      });
+      this.setState(
+        {
+          position: { lng: data.lngLat.lng, lat: data.lngLat.lat }
+        },
+        () => {
+          this.props.setGeoPosition(this.state.position);
+        }
+      );
     });
   }
 
@@ -75,7 +90,7 @@ class MapBox extends Component {
   render() {
     const style = {
       position: "absolute",
-      top: "7%",
+      top: "4%",
       bottom: 0,
       width: "100%"
     };
