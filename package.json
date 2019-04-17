@@ -9,7 +9,7 @@
     "firebase": "^5.9.2",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
-    "pdfjs-dist": "^2.0.943",
+    "mapbox-gl": "^0.53.1",
     "rc-tween-one": "^2.4.0",
     "react": "^16.8.4",
     "react-app-rewired": "^2.1.1",

@@ -7,7 +7,7 @@ import UploadButton from "./../UploadButton/index";
 import ProgressIndicator from "./ProgressIndicator";
 import UploadList from "./UploadList";
 import loadingIcon from "../../../Res/ball-triangle.svg";
-import pdfjsLib from "pdfjs-dist";
+import MapBox from "../MapBox/MapBox";
 
 const Fragment = React.Fragment;
 
@@ -62,18 +62,6 @@ class UploadHome extends Component {
           console.error("Something nasty happened", error);
         },
         () => {
-          //--> Valanj mook pididkal Detected!!
-
-          // let location = uploadFile.snapshot.ref.location.bucket;
-          // var path = uploadFile.snapshot.ref.location.path;
-          // let downloadURL = location + "/" + path;
-          // let urls = this.state.urls;
-          // urls[index] = {
-          //   urls: downloadURL,
-          //   type: item.paperSize
-          // };
-          // this.setState({ urls });
-
           uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
             let urls = that.state.urls;
             urls[index] = {
@@ -137,19 +125,6 @@ class UploadHome extends Component {
       return false;
     }
 
-    var reader = new FileReader();
-
-    reader.onload = function() {
-      // console.log("file", reader.result);
-      pdfjsLib.getDocument({ data: reader.result }).then(function(doc) {
-        var numPages = doc.numPages;
-        console.log("# Document Loaded");
-        console.log("Number of Pages: " + numPages);
-      });
-    };
-
-    reader.readAsBinaryString(file);
-
     file.paperSize = "A4";
     this.setState(state => ({
       fileList: [...state.fileList, file]
@@ -197,7 +172,7 @@ class UploadHome extends Component {
                 {onNext ? (
                   <Fragment>
                     <div className="map-content">
-                      Map Content under development
+                      <MapBox />
                     </div>
                     <div className="upload-button-group">
                       <div
