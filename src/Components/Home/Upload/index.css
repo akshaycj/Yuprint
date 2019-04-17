@@ -71,9 +71,25 @@
 }
 .list-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
   width: 100%;
+}
+.top-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.dropDown-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.dropDown-container .ant-select {
+  width: 45%;
 }
 .loading-indicator {
   display: flex;

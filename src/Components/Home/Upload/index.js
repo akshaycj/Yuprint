@@ -133,6 +133,9 @@ class UploadHome extends Component {
   handleSizeChange = (value, item) => {
     item.paperSize = value;
   };
+  handleColorChange = (value, item) => {
+    item.color = value;
+  };
   beforeUpload = file => {
     console.log(file.type);
     let allowedExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
@@ -261,6 +264,7 @@ class UploadHome extends Component {
                     <UploadList
                       fileList={fileList}
                       handleSizeChange={this.handleSizeChange}
+                      handleColorChange={this.handleColorChange}
                       handleDelete={this.handleDelete}
                     />
                     <TextArea
