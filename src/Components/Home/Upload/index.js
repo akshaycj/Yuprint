@@ -38,7 +38,6 @@ class UploadHome extends Component {
   }
 
   handleUpload = () => {
-    console.log(this.state);
     var { id, fileList, completed } = this.state;
     this.setState({ loading: true, pending: fileList.length });
 
@@ -170,6 +169,18 @@ class UploadHome extends Component {
     this.setState({ geoPosition: pos });
   };
 
+  validateData = () => {
+    if (!this.state.geoPosition) {
+      message.error("Please pin your location to continue");
+    } else if (!this.state.address1) {
+      message.error("Please enter Door No. / Flat");
+    } else if (!this.state.address2) {
+      message.error("Please enter a Landmark, Locality");
+    } else {
+      this.handleUpload();
+    }
+  };
+
   render() {
     const {
       fileList,
@@ -238,7 +249,7 @@ class UploadHome extends Component {
                         </div>{" "}
                         <div
                           className="upload-button upload-button-back"
-                          onClick={this.handleUpload}
+                          onClick={this.validateData}
                         >
                           Done
                         </div>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { message } from "antd";
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 mapboxgl.accessToken =
@@ -58,15 +59,21 @@ class MapBox extends Component {
       geolocate.trigger();
     });
     geolocate.on("geolocate", data => {
-      marker.setLngLat([data.coords.longitude, data.coords.latitude]);
-      this.setState(
-        {
-          position: { lng: data.coords.longitude, lat: data.coords.latitude }
-        },
-        () => {
-          this.props.setGeoPosition(this.state.position);
-        }
-      );
+      if (
+        this.checkIfWithinBounds(data.coords.longitude, data.coords.latitude)
+      ) {
+        marker.setLngLat([data.coords.longitude, data.coords.latitude]);
+        this.setState(
+          {
+            position: { lng: data.coords.longitude, lat: data.coords.latitude }
+          },
+          () => {
+            this.props.setGeoPosition(this.state.position);
+          }
+        );
+      } else {
+        message.error("Currently available only near CUSAT");
+      }
     });
 
     // On Click
@@ -81,6 +88,16 @@ class MapBox extends Component {
         }
       );
     });
+  }
+
+  checkIfWithinBounds(x, y) {
+    const a = 76.29055;
+    const b = 10.007523;
+    const c = 76.383933;
+    const d = 10.083249;
+
+    if (x > a && x < c && y > b && y < d) return true;
+    else return false;
   }
 
   componentWillUnmount() {
