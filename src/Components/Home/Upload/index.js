@@ -27,7 +27,10 @@ class UploadHome extends Component {
       completed: 0,
       progress: 0,
       id: this.props.user.uid || "test user id",
-      onNext: false
+      onNext: false,
+      geoPosition: null,
+      address1: "",
+      address2: ""
     };
   }
   componentDidMount() {
@@ -76,7 +79,14 @@ class UploadHome extends Component {
       return uploadFile;
     });
     Promise.all(storeFileStorage).then(() => {
-      var { description, id, urls } = this.state;
+      var {
+        description,
+        id,
+        urls,
+        address1,
+        address2,
+        geoPosition
+      } = this.state;
       db.ref("store")
         .child("orders")
         .child("active")
@@ -87,7 +97,10 @@ class UploadHome extends Component {
             mobile: this.props.user.phoneNumber || "test mobileNo",
             timestamp: new Date().toISOString(),
             urls: urls,
-            status: "active"
+            status: "active",
+            address1: address1,
+            address2: address2,
+            geoPosition: geoPosition
           },
           err => {
             if (err) {
@@ -107,6 +120,9 @@ class UploadHome extends Component {
   };
   handleSizeChange = (value, item) => {
     item.paperSize = value;
+  };
+  handleColorChange = (value, item) => {
+    item.color = value;
   };
   beforeUpload = file => {
     console.log(file.type);
@@ -135,6 +151,29 @@ class UploadHome extends Component {
   handleDescriptionChange = e => {
     this.setState({ description: e.target.value });
   };
+
+  inputChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  setGeoPosition = pos => {
+    this.setState({ geoPosition: pos });
+  };
+
+  validateData = () => {
+    if (!this.state.geoPosition) {
+      message.error("Please pin your location to continue");
+    } else if (!this.state.address1) {
+      message.error("Please enter Door No. / Flat");
+    } else if (!this.state.address2) {
+      message.error("Please enter a Landmark, Locality");
+    } else {
+      this.handleUpload();
+    }
+  };
+
   render() {
     const {
       fileList,
@@ -172,22 +211,41 @@ class UploadHome extends Component {
                 {onNext ? (
                   <Fragment>
                     <div className="map-content">
-                      <MapBox />
+                      <MapBox setGeoPosition={this.setGeoPosition} />
                     </div>
-                    <div className="upload-button-group">
-                      <div
-                        className="upload-button upload-button-border"
-                        onClick={() => {
-                          this.setState({ onNext: false });
-                        }}
-                      >
-                        Prev
-                      </div>{" "}
-                      <div
-                        className="upload-button upload-button-back"
-                        onClick={this.handleUpload}
-                      >
-                        Done
+                    <div className="address-container">
+                      <h5 style={{ color: "red" }}>
+                        *Currently available only near CUSAT
+                      </h5>
+                      <Input
+                        type="text"
+                        placeholder="Door No. / Flat"
+                        name="address1"
+                        onChange={this.inputChange}
+                        value={this.state.address1}
+                      />
+                      <Input
+                        type="text"
+                        placeholder="Landmark, Locality"
+                        name="address2"
+                        onChange={this.inputChange}
+                        value={this.state.address2}
+                      />
+                      <div className="upload-button-group">
+                        <div
+                          className="upload-button upload-button-border"
+                          onClick={() => {
+                            this.setState({ onNext: false });
+                          }}
+                        >
+                          Prev
+                        </div>{" "}
+                        <div
+                          className="upload-button upload-button-back"
+                          onClick={this.validateData}
+                        >
+                          Done
+                        </div>
                       </div>
                     </div>
                   </Fragment>
@@ -196,6 +254,7 @@ class UploadHome extends Component {
                     <UploadList
                       fileList={fileList}
                       handleSizeChange={this.handleSizeChange}
+                      handleColorChange={this.handleColorChange}
                       handleDelete={this.handleDelete}
                     />
                     <TextArea

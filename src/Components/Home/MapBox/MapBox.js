@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { message } from "antd";
 
 const mapboxgl = require("mapbox-gl/dist/mapbox-gl.js");
 mapboxgl.accessToken =
@@ -35,9 +36,14 @@ class MapBox extends Component {
       .addTo(this.map);
     const onDragEnd = () => {
       let lngLat = marker.getLngLat();
-      this.setState({
-        position: { lng: lngLat.lng, lat: lngLat.lat }
-      });
+      this.setState(
+        {
+          position: { lng: lngLat.lng, lat: lngLat.lat }
+        },
+        () => {
+          this.props.setGeoPosition(this.state.position);
+        }
+      );
     };
     marker.on("dragend", onDragEnd);
 
@@ -53,19 +59,45 @@ class MapBox extends Component {
       geolocate.trigger();
     });
     geolocate.on("geolocate", data => {
-      marker.setLngLat([data.coords.longitude, data.coords.latitude]);
-      this.setState({
-        position: { lng: data.coords.longitude, lat: data.coords.latitude }
-      });
+      if (
+        this.checkIfWithinBounds(data.coords.longitude, data.coords.latitude)
+      ) {
+        marker.setLngLat([data.coords.longitude, data.coords.latitude]);
+        this.setState(
+          {
+            position: { lng: data.coords.longitude, lat: data.coords.latitude }
+          },
+          () => {
+            this.props.setGeoPosition(this.state.position);
+          }
+        );
+      } else {
+        message.error("Currently available only near CUSAT");
+      }
     });
 
     // On Click
     this.map.on("click", data => {
       marker.setLngLat([data.lngLat.lng, data.lngLat.lat]);
-      this.setState({
-        position: { lng: data.lngLat.lng, lat: data.lngLat.lat }
-      });
+      this.setState(
+        {
+          position: { lng: data.lngLat.lng, lat: data.lngLat.lat }
+        },
+        () => {
+          this.props.setGeoPosition(this.state.position);
+        }
+      );
     });
+  }
+
+  checkIfWithinBounds(x, y) {
+    const a = 76.29055;
+    const b = 10.007523;
+    const c = 76.383933;
+    const d = 10.083249;
+
+    if (x > a && x < c && y > b && y < d) return true;
+    else return false;
   }
 
   componentWillUnmount() {
@@ -75,7 +107,7 @@ class MapBox extends Component {
   render() {
     const style = {
       position: "absolute",
-      top: "7%",
+      top: "4%",
       bottom: 0,
       width: "100%"
     };
