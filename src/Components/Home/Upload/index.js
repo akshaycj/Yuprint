@@ -7,6 +7,7 @@ import UploadButton from "./../UploadButton/index";
 import ProgressIndicator from "./ProgressIndicator";
 import UploadList from "./UploadList";
 import loadingIcon from "../../../Res/ball-triangle.svg";
+import pdfjsLib from "pdfjs-dist";
 
 const Fragment = React.Fragment;
 
@@ -135,10 +136,25 @@ class UploadHome extends Component {
       );
       return false;
     }
+
+    var reader = new FileReader();
+
+    reader.onload = function() {
+      // console.log("file", reader.result);
+      pdfjsLib.getDocument({ data: reader.result }).then(function(doc) {
+        var numPages = doc.numPages;
+        console.log("# Document Loaded");
+        console.log("Number of Pages: " + numPages);
+      });
+    };
+
+    reader.readAsBinaryString(file);
+
     file.paperSize = "A4";
     this.setState(state => ({
       fileList: [...state.fileList, file]
     }));
+
     return false;
   };
   handleDescriptionChange = e => {
