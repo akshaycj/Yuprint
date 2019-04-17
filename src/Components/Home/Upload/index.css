@@ -9,16 +9,23 @@
   justify-content: space-evenly;
 }
 
+/* MAPBOX START */
 .map-content {
   display: flex;
   width: 100%;
   justify-content: center;
 }
 
+.mapboxgl-map {
+  height: 50%;
+}
+/* MAPBOX END */
 .upload-button-group {
   display: flex;
   justify-content: space-around;
   width: 100%;
+  position: absolute;
+  top: 63%;
 }
 .upload-button {
   padding: 5px;

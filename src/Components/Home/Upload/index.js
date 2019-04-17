@@ -7,6 +7,7 @@ import UploadButton from "./../UploadButton/index";
 import ProgressIndicator from "./ProgressIndicator";
 import UploadList from "./UploadList";
 import loadingIcon from "../../../Res/ball-triangle.svg";
+import MapBox from "../MapBox/MapBox";
 
 const Fragment = React.Fragment;
 
@@ -181,7 +182,7 @@ class UploadHome extends Component {
                 {onNext ? (
                   <Fragment>
                     <div className="map-content">
-                      Map Content under development
+                      <MapBox />
                     </div>
                     <div className="upload-button-group">
                       <div
