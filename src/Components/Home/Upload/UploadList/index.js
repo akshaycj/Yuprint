@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Select, List, Icon } from "antd";
-
 export default class extends Component {
   render() {
     const Option = Select.Option;

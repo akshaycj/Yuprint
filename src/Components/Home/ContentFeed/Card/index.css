@@ -1,18 +1,37 @@
-.card-container{
+.card-container {
   height: 100px;
-  overflow:hidden;
-  width: 100px;
+  overflow: hidden;
+  width: 100%;
   border-radius: 5px;
-  background-color: purple;
+  background-color: #5f6ae71a;
   align-items: center;
   justify-content: center;
   margin: 5px;
-  padding: 5px;
+  padding: 10px;
   position: relative;
 }
 
-.button-openfile{
-  position:absolute;
+.card-container:hover {
+  background: linear-gradient(to right, #8e54e9, #4776e6);
+  color: white;
+  cursor: pointer;
+}
+
+.card-container:focus {
+  background: linear-gradient(to right, #8e54e9, #4776e6);
+  color: white;
+}
+
+.card-container p {
+  word-break: break-all;
+}
+
+.card-container h3 {
+  color: inherit;
+}
+
+.button-openfile {
+  position: absolute;
   bottom: 0px;
-  right:0px;
+  right: 0px;
 }

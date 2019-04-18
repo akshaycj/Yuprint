@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload, Input, message } from "antd";
+import { Upload, Input, message, TimePicker, DatePicker, Radio } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
@@ -8,6 +8,7 @@ import ProgressIndicator from "./ProgressIndicator";
 import UploadList from "./UploadList";
 import loadingIcon from "../../../Res/ball-triangle.svg";
 import MapBox from "../MapBox/MapBox";
+import moment from "moment";
 
 const Fragment = React.Fragment;
 
@@ -31,7 +32,10 @@ class UploadHome extends Component {
       onNext: false,
       geoPosition: null,
       address1: "",
-      address2: ""
+      address2: "",
+      asap: true,
+      scheduleTime: null,
+      scheduleDate: null
     };
   }
   componentDidMount() {
@@ -101,7 +105,16 @@ class UploadHome extends Component {
   };
 
   pushData = urls => {
-    var { description, id, address1, address2, geoPosition } = this.state;
+    var {
+      description,
+      id,
+      address1,
+      address2,
+      geoPosition,
+      asap,
+      scheduleDate,
+      scheduleTime
+    } = this.state;
     var data = {
       description: description,
       user: id || "test user",
@@ -111,7 +124,10 @@ class UploadHome extends Component {
       status: "active",
       address1: address1,
       address2: address2,
-      geoPosition: geoPosition
+      geoPosition: geoPosition,
+      asap: asap,
+      scheduleDate: moment(scheduleDate).format("L"),
+      scheduleTime: moment(scheduleTime).format("LT")
     };
     console.log("data", data);
 
@@ -146,6 +162,26 @@ class UploadHome extends Component {
   };
   handleColorChange = (value, item) => {
     item.color = value;
+  };
+
+  handleTimeChange = e => {
+    this.setState({
+      scheduleTime: e
+    });
+  };
+
+  handleDateChange = e => {
+    this.setState({
+      scheduleDate: e
+    });
+  };
+
+  handleTimeRadioChange = e => {
+    if (!e.target.value) {
+      this.setState({ scheduleTime: null, scheduleDate: null, asap: true });
+    } else {
+      this.setState({ asap: false });
+    }
   };
   beforeUpload = file => {
     let allowedExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
@@ -197,7 +233,22 @@ class UploadHome extends Component {
     }
   };
 
+  goToNext = () => {
+    if (!this.state.asap) {
+      if (!this.state.scheduleDate) {
+        message.error("Please select a Date");
+      } else if (!this.state.scheduleTime) {
+        message.error("Please select the time");
+      } else {
+        this.setState({ onNext: true });
+      }
+    } else {
+      this.setState({ onNext: true });
+    }
+  };
+
   render() {
+    const RadioGroup = Radio.Group;
     const {
       fileList,
       loading,
@@ -280,6 +331,28 @@ class UploadHome extends Component {
                       handleColorChange={this.handleColorChange}
                       handleDelete={this.handleDelete}
                     />
+                    <div className="timeRadioContainer">
+                      <RadioGroup
+                        name="timeRadio"
+                        onChange={this.handleTimeRadioChange}
+                        defaultValue={this.state.asap ? 0 : 1}
+                      >
+                        <Radio value={0}>ASAP</Radio>
+                        <Radio value={1}>SCHEDULE</Radio>
+                      </RadioGroup>
+                    </div>
+                    <div className="dateAndTime">
+                      <DatePicker
+                        onChange={this.handleDateChange}
+                        value={this.state.scheduleDate}
+                        disabled={this.state.asap}
+                      />
+                      <TimePicker
+                        onChange={this.handleTimeChange}
+                        value={this.state.scheduleTime}
+                        disabled={this.state.asap}
+                      />
+                    </div>
                     <TextArea
                       rows={4}
                       style={{ marginBottom: 20 }}

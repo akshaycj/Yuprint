@@ -1,7 +1,3 @@
-/* .upload-home-tab {
-  overflow-y: scroll;
-} */
-
 .home-main {
   display: flex;
   position: relative;
@@ -11,7 +7,7 @@
   min-height: 100%;
   height: auto;
   overflow-y: auto;
-  justify-content: space-evenly;
+  justify-content: flex-start;
 }
 
 /* MAPBOX START */
@@ -76,7 +72,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  align-content: space-around;
+  justify-content: flex-start;
   width: 100%;
 }
 .top-content {
@@ -92,6 +89,19 @@
   width: 100%;
 }
 .dropDown-container .ant-select {
+  width: 45%;
+}
+.timeRadioContainer {
+  margin-top: 16px 0;
+}
+.dateAndTime {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin: 16px 0;
+}
+.dateAndTime span {
   width: 45%;
 }
 .loading-indicator {
