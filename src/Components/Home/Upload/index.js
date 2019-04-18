@@ -124,13 +124,17 @@ class UploadHome extends Component {
         } else {
           message.success("upload successful");
         }
-        this.setState({
-          loading: false,
-          fileList: [],
-          description: "",
-          onNext: false
-        });
+        this.onClear();
       });
+  };
+
+  onClear = () => {
+    this.setState({
+      loading: false,
+      fileList: [],
+      description: "",
+      onNext: false
+    });
   };
   handleDelete = index => {
     let fileList = this.state.fileList;
@@ -283,13 +287,21 @@ class UploadHome extends Component {
                       value={this.state.description}
                       onChange={this.handleDescriptionChange}
                     />
-                    <div
-                      className="upload-button upload-button-border"
-                      onClick={() => {
-                        this.setState({ onNext: true });
-                      }}
-                    >
-                      Next
+                    <div className="upload-button-group">
+                      <div
+                        className="upload-button cancel-button"
+                        onClick={this.onClear}
+                      >
+                        Cancel
+                      </div>{" "}
+                      <div
+                        className="upload-button upload-button-border"
+                        onClick={() => {
+                          this.setState({ onNext: true });
+                        }}
+                      >
+                        Next
+                      </div>
                     </div>
                   </Fragment>
                 )}
@@ -297,14 +309,6 @@ class UploadHome extends Component {
             )}
           </Fragment>
         )}
-
-        {/* <Button
-          type="primary"
-          onClick={this.handleUpload}
-          disabled={fileList.length ? false : true}
-        >
-          Upload
-        </Button> */}
       </div>
     );
   }
