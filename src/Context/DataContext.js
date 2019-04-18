@@ -6,19 +6,25 @@ export default class Provider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: []
+      user: {
+        uid: localStorage.getItem("uid"),
+        mobile: localStorage.getItem("mobile")
+      }
     };
   }
 
   componentDidMount() {
     auth.onAuthStateChanged(user => {
       if (user) {
+        console.log("user", user);
+
         this.setState({ user });
       }
     });
   }
 
   setUser = user => {
+    localStorage.setItem("uid", user.uid);
     this.setState({ user });
   };
   render() {

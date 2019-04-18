@@ -27,6 +27,7 @@ class UploadHome extends Component {
       completed: 0,
       progress: 0,
       id: this.props.user.uid || "test user id",
+      mobile: this.props.user.mobile,
       onNext: false,
       geoPosition: null,
       address1: "",
@@ -101,7 +102,6 @@ class UploadHome extends Component {
 
   pushData = urls => {
     var { description, id, address1, address2, geoPosition } = this.state;
-
     var data = {
       description: description,
       user: id || "test user",
@@ -144,7 +144,6 @@ class UploadHome extends Component {
     item.color = value;
   };
   beforeUpload = file => {
-    console.log(file.type);
     let allowedExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
     let allowedMIMEType = [
       "application/pdf",
