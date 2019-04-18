@@ -69,6 +69,7 @@ class Otp extends Component {
 
   saveUser = () => {
     const { email, mobile, displayName, uid } = this.props.user;
+    localStorage.setItem("mob", mobile);
     db.ref("users")
       .child(uid)
       .set({
