@@ -28,7 +28,7 @@ export default class extends Component {
               </div>
               <div className="dropDown-container">
                 <Select
-                  defaultValue="Color"
+                  defaultValue="Black and White"
                   style={{ fontSize: 12 }}
                   onChange={e => handleColorChange(e, item)}
                 >

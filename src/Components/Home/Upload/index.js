@@ -65,53 +65,72 @@ class UploadHome extends Component {
           console.error("Something nasty happened", error);
         },
         () => {
-          uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            let urls = that.state.urls;
-            urls[index] = {
-              urls: downloadURL,
-              type: item.paperSize
-            };
-            completed = completed + 1;
-            that.setState({ urls, completed });
-          });
+          let location = uploadFile.snapshot.ref.location.bucket;
+          var path = uploadFile.snapshot.ref.location.path;
+          let downloadURL = location + "/" + path;
+          let urls = that.state.urls;
+          urls[index] = {
+            url: downloadURL,
+            type: item.paperSize,
+            color: item.color
+          };
+          completed = completed + 1;
+          that.setState({ urls, completed });
+          // uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          //   let urls = that.state.urls;
+          //   urls[index] = {
+          //     url: downloadURL,
+          //     type: item.paperSize,
+          //     color: item.color
+          //   };
+          //   completed = completed + 1;
+          //   that.setState({ urls, completed });
+          // });
         }
       );
+
       return uploadFile;
     });
+
     Promise.all(storeFileStorage).then(() => {
-      var {
-        description,
-        id,
-        urls,
-        address1,
-        address2,
-        geoPosition
-      } = this.state;
-      db.ref("store")
-        .child("orders")
-        .child("active")
-        .push(
-          {
-            description: description,
-            user: id || "test user",
-            mobile: this.props.user.phoneNumber || "test mobileNo",
-            timestamp: new Date().toISOString(),
-            urls: urls,
-            status: "active",
-            address1: address1,
-            address2: address2,
-            geoPosition: geoPosition
-          },
-          err => {
-            if (err) {
-              message.error("upload failed.");
-            } else {
-              message.success("upload successful");
-            }
-            this.setState({ loading: false, fileList: [], description: "" });
-          }
-        );
+      console.log("urls", this.state.urls);
+
+      this.pushData(this.state.urls);
     });
+  };
+
+  pushData = urls => {
+    var { description, id, address1, address2, geoPosition } = this.state;
+
+    var data = {
+      description: description,
+      user: id || "test user",
+      mobile: this.props.user.phoneNumber || "test mobileNo",
+      timestamp: new Date().toISOString(),
+      urls: urls,
+      status: "active",
+      address1: address1,
+      address2: address2,
+      geoPosition: geoPosition
+    };
+    console.log("data", data);
+
+    db.ref("store")
+      .child("orders")
+      .child("active")
+      .push(data, err => {
+        if (err) {
+          message.error("upload failed.");
+        } else {
+          message.success("upload successful");
+        }
+        this.setState({
+          loading: false,
+          fileList: [],
+          description: "",
+          onNext: false
+        });
+      });
   };
   handleDelete = index => {
     let fileList = this.state.fileList;
@@ -142,6 +161,7 @@ class UploadHome extends Component {
     }
 
     file.paperSize = "A4";
+    file.color = "Black and White";
     this.setState(state => ({
       fileList: [...state.fileList, file]
     }));
