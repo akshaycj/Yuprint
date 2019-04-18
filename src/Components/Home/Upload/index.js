@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload, Input, message } from "antd";
+import { Upload, Input, message, TimePicker, DatePicker, Radio } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
@@ -8,6 +8,7 @@ import ProgressIndicator from "./ProgressIndicator";
 import UploadList from "./UploadList";
 import loadingIcon from "../../../Res/ball-triangle.svg";
 import MapBox from "../MapBox/MapBox";
+import moment from "moment";
 
 const Fragment = React.Fragment;
 
@@ -125,8 +126,8 @@ class UploadHome extends Component {
       address2: address2,
       geoPosition: geoPosition,
       asap: asap,
-      scheduleDate: scheduleDate,
-      scheduleTime: scheduleTime
+      scheduleDate: moment(scheduleDate).format("L"),
+      scheduleTime: moment(scheduleTime).format("LT")
     };
     console.log("data", data);
 
@@ -158,28 +159,25 @@ class UploadHome extends Component {
   handleColorChange = (value, item) => {
     item.color = value;
   };
-  handleTimeRadioChange = value => {
-    if (value) {
-      this.setState({
-        asap: false
-      });
+
+  handleTimeChange = e => {
+    this.setState({
+      scheduleTime: e
+    });
+  };
+
+  handleDateChange = e => {
+    this.setState({
+      scheduleDate: e
+    });
+  };
+
+  handleTimeRadioChange = e => {
+    if (!e.target.value) {
+      this.setState({ scheduleTime: null, scheduleDate: null, asap: true });
     } else {
-      this.setState({
-        asap: true,
-        scheduleDate: null,
-        scheduleTime: null
-      });
+      this.setState({ asap: false });
     }
-  };
-  setScheduleTime = value => {
-    this.setState({
-      scheduleTime: value
-    });
-  };
-  setScheduleDate = value => {
-    this.setState({
-      scheduleDate: value
-    });
   };
   beforeUpload = file => {
     let allowedExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
@@ -246,6 +244,7 @@ class UploadHome extends Component {
   };
 
   render() {
+    const RadioGroup = Radio.Group;
     const {
       fileList,
       loading,
@@ -327,10 +326,29 @@ class UploadHome extends Component {
                       handleSizeChange={this.handleSizeChange}
                       handleColorChange={this.handleColorChange}
                       handleDelete={this.handleDelete}
-                      handleTimeRadioChange={this.handleTimeRadioChange}
-                      setScheduleTime={this.setScheduleTime}
-                      setScheduleDate={this.setScheduleDate}
                     />
+                    <div className="timeRadioContainer">
+                      <RadioGroup
+                        name="timeRadio"
+                        onChange={this.handleTimeRadioChange}
+                        defaultValue={this.state.asap ? 0 : 1}
+                      >
+                        <Radio value={0}>ASAP</Radio>
+                        <Radio value={1}>SCHEDULE</Radio>
+                      </RadioGroup>
+                    </div>
+                    <div className="dateAndTime">
+                      <DatePicker
+                        onChange={this.handleDateChange}
+                        value={this.state.scheduleDate}
+                        disabled={this.state.asap}
+                      />
+                      <TimePicker
+                        onChange={this.handleTimeChange}
+                        value={this.state.scheduleTime}
+                        disabled={this.state.asap}
+                      />
+                    </div>
                     <TextArea
                       rows={4}
                       style={{ marginBottom: 20 }}
