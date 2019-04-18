@@ -1,0 +1,60 @@
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 360px;
+  width: 94%;
+  -webkit-align-self: center;
+  align-self: center;
+  height: 100%;
+}
+
+.contentMainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 360px;
+  width: 94%;
+  -webkit-align-self: center;
+  align-self: center;
+  height: 100%;
+}
+
+.main-container .navbar {
+  padding: 4px;
+  background: linear-gradient(to right, #8e54e9, #4776e6);
+}
+
+.main-container .navbar i {
+  font-size: 30px;
+  color: white;
+}
+
+.contentMainContainer h2 {
+  margin-bottom: 0;
+  font-weight: 700;
+}
+
+.contentMainContainer h5 span {
+  font-weight: 700;
+}
+
+.contentMainContainer p {
+  margin-top: 10px;
+}
+
+.contentMainContainer .tagsContainer {
+  display: flex;
+  flex-direction: row;
+  color: grey;
+}
+
+.contentMainContainer .buttonsContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 100%;
+  align-content: center;
+  align-items: center;
+  height: 200px;
+}

@@ -18,7 +18,7 @@ class App extends Component {
             <Route path="/home" exact component={Home} />
             <Route path="/signup" exact component={Signup} />
             <Route path="/otp" exact component={Otp} />
-            <Route path="/singlepage" exact component={SinglePage} />
+            <Route path="/singlepage/:id" exact component={SinglePage} />
           </Switch>
         </Provider>
       </BrowserRouter>
