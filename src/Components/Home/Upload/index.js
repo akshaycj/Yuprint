@@ -104,7 +104,16 @@ class UploadHome extends Component {
   };
 
   pushData = urls => {
-    var { description, id, address1, address2, geoPosition } = this.state;
+    var {
+      description,
+      id,
+      address1,
+      address2,
+      geoPosition,
+      asap,
+      scheduleDate,
+      scheduleTime
+    } = this.state;
     var data = {
       description: description,
       user: id || "test user",
@@ -114,7 +123,10 @@ class UploadHome extends Component {
       status: "active",
       address1: address1,
       address2: address2,
-      geoPosition: geoPosition
+      geoPosition: geoPosition,
+      asap: asap,
+      scheduleDate: scheduleDate,
+      scheduleTime: scheduleTime
     };
     console.log("data", data);
 
