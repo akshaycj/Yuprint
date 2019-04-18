@@ -67,7 +67,7 @@ export default class Home extends Component {
           <TabPane className="upload-home-tab" tab="Tab 1" key="print">
             <UploadHome />
           </TabPane>
-          <TabPane tab="Tab 2" key="content">
+          <TabPane className="content-tab" tab="Tab 2" key="content">
             <ContentFeed />
           </TabPane>
           <TabPane tab="Tab 2" key="upload">

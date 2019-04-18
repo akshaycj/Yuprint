@@ -1,3 +1,14 @@
+.content-tab {
+  overflow-y: scroll;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+  padding: 10px 0;
+}
+
+.content-tab::-webkit-scrollbar {
+  width: 0 !important;
+}
+
 .upload-home-tab {
   overflow-y: scroll;
   overflow: -moz-scrollbars-none;

@@ -48,12 +48,15 @@ export default class Card extends Component {
           {item.description}
         </Modal>
 
-        <h3 style={{ marginLeft: "5%" }}>{item.title}</h3>
-        {item.description}
+        <h3>{item.title}</h3>
+        <p>
+          {item.description.slice(0, 105) +
+            (item.description.length > 105 ? "..." : "")}
+        </p>
 
-        <button className="button-openfile">
+        {/* <button className="button-openfile">
           <Icon type="download" />
-        </button>
+        </button> */}
 
         {redirect ? <Redirect to={`/singlepage/${item.key}`} /> : null}
       </div>
