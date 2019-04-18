@@ -1,14 +1,48 @@
 import React, { Component } from "react";
-import { Select, List, Icon } from "antd";
-
+import { Select, List, Icon, TimePicker, DatePicker, Radio } from "antd";
+import moment from "moment";
 export default class extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: null,
+      date: null,
+      asap: true
+    };
+  }
+
+  handleTimeChange = e => {
+    this.setState({ time: e }, () => {
+      this.props.setScheduleTime(moment(this.state.time).format("LT"));
+    });
+  };
+
+  handleDateChange = e => {
+    this.setState({ date: e }, () => {
+      this.props.setScheduleDate(moment(this.state.date).format("L"));
+    });
+  };
+
+  handleTimeRadioChange = e => {
+    this.props.handleTimeRadioChange(e.target.value);
+    if (!e.target.value) {
+      this.setState({ time: null, date: null, asap: true });
+    } else {
+      this.setState({ asap: false });
+    }
+  };
+
   render() {
     const Option = Select.Option;
+    const RadioGroup = Radio.Group;
     const {
       fileList,
       handleDelete,
       handleSizeChange,
-      handleColorChange
+      handleColorChange,
+      handleTimeRadioChange,
+      setScheduleTime,
+      setScheduleDate
     } = this.props;
     return (
       <div className="list-container">
@@ -44,6 +78,28 @@ export default class extends Component {
                   <Option value="A3">A3</Option>
                   <Option value="A2">A2</Option>
                 </Select>
+              </div>
+              <div className="timeRadioContainer">
+                <RadioGroup
+                  name="timeRadio"
+                  onChange={this.handleTimeRadioChange}
+                  defaultValue={0}
+                >
+                  <Radio value={0}>ASAP</Radio>
+                  <Radio value={1}>SCHEDULE</Radio>
+                </RadioGroup>
+              </div>
+              <div className="dateAndTime">
+                <DatePicker
+                  onChange={this.handleDateChange}
+                  value={this.state.date}
+                  disabled={this.state.asap}
+                />
+                <TimePicker
+                  onChange={this.handleTimeChange}
+                  value={this.state.time}
+                  disabled={this.state.asap}
+                />
               </div>
             </List.Item>
           )}

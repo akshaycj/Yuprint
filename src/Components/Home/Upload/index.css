@@ -73,8 +73,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  align-content: space-around;
   justify-content: space-around;
   width: 100%;
+  height: 185px;
 }
 .top-content {
   display: flex;
@@ -89,6 +91,15 @@
   width: 100%;
 }
 .dropDown-container .ant-select {
+  width: 45%;
+}
+.dateAndTime {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.dateAndTime span {
   width: 45%;
 }
 .loading-indicator {

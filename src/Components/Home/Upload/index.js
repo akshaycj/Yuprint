@@ -30,7 +30,10 @@ class UploadHome extends Component {
       onNext: false,
       geoPosition: null,
       address1: "",
-      address2: ""
+      address2: "",
+      asap: true,
+      scheduleTime: null,
+      scheduleDate: null
     };
   }
   componentDidMount() {
@@ -136,6 +139,29 @@ class UploadHome extends Component {
   handleColorChange = (value, item) => {
     item.color = value;
   };
+  handleTimeRadioChange = value => {
+    if (value) {
+      this.setState({
+        asap: false
+      });
+    } else {
+      this.setState({
+        asap: true,
+        scheduleDate: null,
+        scheduleTime: null
+      });
+    }
+  };
+  setScheduleTime = value => {
+    this.setState({
+      scheduleTime: value
+    });
+  };
+  setScheduleDate = value => {
+    this.setState({
+      scheduleDate: value
+    });
+  };
   beforeUpload = file => {
     console.log(file.type);
     let allowedExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
@@ -181,6 +207,20 @@ class UploadHome extends Component {
       message.error("Please enter a Landmark, Locality");
     } else {
       this.handleUpload();
+    }
+  };
+
+  goToNext = () => {
+    if (!this.state.asap) {
+      if (!this.state.scheduleDate) {
+        message.error("Please select a Date");
+      } else if (!this.state.scheduleTime) {
+        message.error("Please select the time");
+      } else {
+        this.setState({ onNext: true });
+      }
+    } else {
+      this.setState({ onNext: true });
     }
   };
 
@@ -266,6 +306,9 @@ class UploadHome extends Component {
                       handleSizeChange={this.handleSizeChange}
                       handleColorChange={this.handleColorChange}
                       handleDelete={this.handleDelete}
+                      handleTimeRadioChange={this.handleTimeRadioChange}
+                      setScheduleTime={this.setScheduleTime}
+                      setScheduleDate={this.setScheduleDate}
                     />
                     <TextArea
                       rows={4}
@@ -276,9 +319,7 @@ class UploadHome extends Component {
                     />
                     <div
                       className="upload-button upload-button-border"
-                      onClick={() => {
-                        this.setState({ onNext: true });
-                      }}
+                      onClick={this.goToNext}
                     >
                       Next
                     </div>
