@@ -70,13 +70,11 @@ class SinglePage extends React.Component {
               }}
             >
               <Button className="upload-button upload-button-border">
-                View
+                Share
               </Button>
             </CopyToClipboard>
             <Button className="upload-button upload-button-back">Print</Button>
-            <Button className="upload-button upload-button-border">
-              Share
-            </Button>
+            <Button className="upload-button upload-button-border">View</Button>
           </div>
         </div>
         {this.state.redirect ? <Redirect to="/home" /> : null}
