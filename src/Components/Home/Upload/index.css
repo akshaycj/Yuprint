@@ -53,6 +53,9 @@
   border: solid 1px #13c2c2;
   color: #13c2c2;
 }
+.cancel-button {
+  border: solid 1px dashed;
+}
 .ant-upload-select-picture-card i {
   font-size: 32px;
   color: #999;
