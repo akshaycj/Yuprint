@@ -2,8 +2,9 @@ import React from "react";
 import { Consumer } from "../../Context/DataContext";
 import "./index.css";
 import { db } from "../../Utils/config";
-import { Spin, Icon, Button } from "antd";
+import { Spin, Icon, Button, message } from "antd";
 import { Redirect } from "react-router-dom";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default props => (
   <Consumer>
@@ -18,7 +19,8 @@ class SinglePage extends React.Component {
     super(props);
     this.state = {
       data: null,
-      redirect: false
+      redirect: false,
+      shareUrl: null
     };
   }
 
@@ -32,7 +34,7 @@ class SinglePage extends React.Component {
           let data = item.val();
           data.key = item.key;
           console.log(data);
-          this.setState({ data });
+          this.setState({ data: data, shareUrl: window.location.href });
         });
     }
   }
@@ -40,6 +42,8 @@ class SinglePage extends React.Component {
   goBack = () => {
     this.setState({ redirect: true });
   };
+
+  copyUrl = () => {};
 
   render() {
     return this.state.data ? (
@@ -59,7 +63,16 @@ class SinglePage extends React.Component {
           </div>
           <p>{this.state.data.description}</p>
           <div className="buttonsContainer">
-            <Button className="upload-button upload-button-border">View</Button>
+            <CopyToClipboard
+              text={this.state.shareUrl}
+              onCopy={() => {
+                message.success("URL copied to clipboard");
+              }}
+            >
+              <Button className="upload-button upload-button-border">
+                View
+              </Button>
+            </CopyToClipboard>
             <Button className="upload-button upload-button-back">Print</Button>
             <Button className="upload-button upload-button-border">
               Share
