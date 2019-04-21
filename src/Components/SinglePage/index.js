@@ -1,10 +1,12 @@
-import React from "react";
+import React , {Fragment} from "react";
 import { Consumer } from "../../Context/DataContext";
 import "./index.css";
 import { db } from "../../Utils/config";
-import { Spin, Icon, Button, message } from "antd";
+import { Spin, Icon, Button, message, Input, Radio, TimePicker, DatePicker, Select } from "antd";
 import { Redirect } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import MapBox from "../Home/MapBox/MapBox";
+import moment from "moment";
 
 export default props => (
   <Consumer>
@@ -18,13 +20,27 @@ class SinglePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: this.props.user.uid || "test user id",
+      mobile: this.props.user.mobile || "test mobile no",
       data: null,
       redirect: false,
-      shareUrl: null
+      shareUrl: null,
+      onNext:false,
+      proceed:false,
+      address1: "",
+      address2: "",
+      geoPosition: "",
+      asap: true,
+      scheduleDate:null,
+      scheduleTime: null,
+      description:"",
+      size:"A4",
+      color:'black and white'
     };
   }
 
   componentDidMount() {
+    console.log('props',this.props);
     if (this.props.match.params.id) {
       db.ref("content")
         .child("users")
@@ -42,15 +58,130 @@ class SinglePage extends React.Component {
   goBack = () => {
     this.setState({ redirect: true });
   };
+  handlePrint=()=>{
+    this.setState({loading:true})
+    var {
+      description,
+      id,
+      address1,
+      address2,
+      geoPosition,
+      asap,
+      scheduleDate,
+      scheduleTime,
+      mobile,
+      size,
+      color
+    } = this.state;
+    var data = {
+      description: description,
+      user: id || "test user",
+      mobile: mobile,
+      timestamp: new Date().toISOString(),
+      urls: {
+        url: this.state.data.url,
+        type: size,
+        color:color
+      },
+      status: "active",
+      address1: address1,
+      address2: address2,
+      geoPosition: geoPosition,
+      asap: asap,
+      scheduleDate: moment(scheduleDate).format("L"),
+      scheduleTime: moment(scheduleTime).format("LT")
+    };
+    console.log('data',data);
+    db.ref("store")
+      .child("orders")
+      .child("active")
+      .push(data, err => {
+        if (err) {
+          message.error("upload failed.");
+        } else {
+          message.success("upload successful");
+        }
+        this.onClear();
+      });
+  }
 
+  setGeoPosition = pos => {
+    this.setState({ geoPosition: pos });
+  };
+  inputChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+  validateData = () => {
+    if (!this.state.geoPosition) {
+      message.error("Please pin your location to continue");
+    } else if (!this.state.address1) {
+      message.error("Please enter Door No. / Flat");
+    } else if (!this.state.address2) {
+      message.error("Please enter a Landmark, Locality");
+    } else {
+      this.handlePrint();
+    }
+  };
+
+  handleSizeChange = (e) => {
+    this.setState({size:e})
+  };
+  handleColorChange = (e) => {
+    this.setState({color:e})
+  };
+
+  handleTimeChange = e => {
+    this.setState({
+      scheduleTime: e
+    });
+  };
+
+  handleDateChange = e => {
+    this.setState({
+      scheduleDate: e
+    });
+  };
+
+  handleTimeRadioChange = e => {
+    if (!e.target.value) {
+      this.setState({ scheduleTime: null, scheduleDate: null, asap: true });
+    } else {
+      this.setState({ asap: false });
+    }
+  };
+
+  handleDescriptionChange = e => {
+    this.setState({ description: e.target.value });
+  };
+
+  onClear = () => {
+    this.setState({
+      loading: false,
+      description: "",
+      onNext: false,
+      redirect:true
+    });
+  };
+
+  handleNext=()=>{
+    this.setState({onNext:true})
+  }
   copyUrl = () => {};
 
   render() {
+    const { data, onNext, proceed }= this.state
+    const RadioGroup = Radio.Group;
+    const { TextArea } = Input;
+    const Option = Select.Option;
+
     return this.state.data ? (
       <div className="main-container">
         <div className="navbar">
           <Icon onClick={this.goBack} type="arrow-left" />
         </div>
+        { !onNext ? (
         <div className="contentMainContainer">
           <h2>{this.state.data.title}</h2>
           <h5>
@@ -73,10 +204,132 @@ class SinglePage extends React.Component {
                 Share
               </Button>
             </CopyToClipboard>
-            <Button className="upload-button upload-button-back">Print</Button>
+            <Button onClick={this.handleNext} className="upload-button upload-button-back">Print</Button>
             <Button className="upload-button upload-button-border">View</Button>
           </div>
         </div>
+        ) : (
+        <Fragment>
+          {
+            proceed ?
+            (
+              <Fragment>
+              <div className="map-content">
+                <MapBox setGeoPosition={this.setGeoPosition} />
+              </div>
+              <div className="address-container">
+                <h5 style={{ color: "red" }}>
+                  *Currently available only near CUSAT
+                </h5>
+                <Input
+                  type="text"
+                  placeholder="Door No. / Flat"
+                  name="address1"
+                  onChange={this.inputChange}
+                  value={this.state.address1}
+                />
+                <Input
+                  type="text"
+                  placeholder="Landmark, Locality"
+                  name="address2"
+                  onChange={this.inputChange}
+                  value={this.state.address2}
+                />
+                <div className="upload-button-group">
+                  <div
+                    className="upload-button upload-button-border"
+                    onClick={() => {
+                      this.setState({ onNext: false });
+                    }}
+                  >
+                    Prev
+                  </div>{" "}
+                  <div
+                    className="upload-button upload-button-back"
+                    onClick={this.validateData}
+                  >
+                    Done
+                  </div>
+                </div>
+              </div>
+            </Fragment>
+            )
+            :
+            (
+              <Fragment>
+                <div className="top-content">
+                  <h4 style={{ flex: 2 }}>{data.title}</h4>
+                </div>
+                <div className="dropDown-container">
+                  <Select
+                    defaultValue="Black and White"
+                    style={{ fontSize: 12 }}
+                    onChange={this.handleColorChange}
+                  >
+                    <Option value="Color">Color</Option>
+                    <Option value="Black and White">Black and White</Option>
+                  </Select>
+                  <Select
+                    defaultValue="A4"
+                    style={{ fontSize: 12 }}
+                    onChange={this.handleSizeChange}
+                  >
+                    <Option value="A4">A4</Option>
+                    <Option value="A3">A3</Option>
+                    <Option value="A2">A2</Option>
+                  </Select>
+                </div>
+                <div className="timeRadioContainer">
+                  <RadioGroup
+                    name="timeRadio"
+                    onChange={this.handleTimeRadioChange}
+                    defaultValue={this.state.asap ? 0 : 1}
+                  >
+                    <Radio value={0}>ASAP</Radio>
+                    <Radio value={1}>SCHEDULE</Radio>
+                  </RadioGroup>
+                </div>
+                <div className="dateAndTime">
+                  <DatePicker
+                    onChange={this.handleDateChange}
+                    value={this.state.scheduleDate}
+                    disabled={this.state.asap}
+                  />
+                  <TimePicker
+                    onChange={this.handleTimeChange}
+                    value={this.state.scheduleTime}
+                    disabled={this.state.asap}
+                  />
+                </div>
+                <TextArea
+                  rows={4}
+                  style={{ marginBottom: 20 }}
+                  placeholder="Printing instructions"
+                  value={this.state.description}
+                  onChange={this.handleDescriptionChange}
+                />
+                <div className="upload-button-group">
+                  <div
+                    className="upload-button cancel-button"
+                    onClick={this.onClear}
+                  >
+                    Cancel
+                  </div>{" "}
+                  <div
+                    className="upload-button upload-button-border"
+                    onClick={() => {
+                      this.setState({ proceed: true });
+                    }}
+                  >
+                    Next
+                  </div>
+                </div>
+              </Fragment>
+            )
+          }
+
+        </Fragment> )
+      }
         {this.state.redirect ? <Redirect to="/home" /> : null}
       </div>
     ) : (
