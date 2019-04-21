@@ -35,7 +35,8 @@ class UploadHome extends Component {
       address2: "",
       asap: true,
       scheduleTime: null,
-      scheduleDate: null
+      scheduleDate: null,
+      uploadUrl:[]
     };
   }
   componentDidMount() {
@@ -43,9 +44,9 @@ class UploadHome extends Component {
   }
 
   handleUpload = () => {
-    var { id, fileList, completed } = this.state;
+    var { id, fileList, completed ,uploadUrl } = this.state;
     this.setState({ loading: true, pending: fileList.length });
-
+    let urls = []
     var that = this;
     let storeFileStorage = fileList.map((item, index) => {
       let uploadFile = storage
@@ -70,38 +71,33 @@ class UploadHome extends Component {
           console.error("Something nasty happened", error);
         },
         () => {
-          let location = uploadFile.snapshot.ref.location.bucket;
-          var path = uploadFile.snapshot.ref.location.path;
-          let downloadURL = location + "/" + path;
-          let urls = that.state.urls;
-          urls[index] = {
-            url: downloadURL,
-            type: item.paperSize,
-            color: item.color
-          };
+          uploadUrl[index]=uploadFile.snapshot.ref
+          urls[index] ={
+            ...urls[index],
+            type:item.paperSize,
+            color:item.color
+          }
           completed = completed + 1;
-          that.setState({ urls, completed });
-          // uploadFile.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-          //   let urls = that.state.urls;
-          //   urls[index] = {
-          //     url: downloadURL,
-          //     type: item.paperSize,
-          //     color: item.color
-          //   };
-          //   completed = completed + 1;
-          //   that.setState({ urls, completed });
-          // });
+          that.setState({uploadUrl, completed });
         }
       );
-
       return uploadFile;
     });
 
-    Promise.all(storeFileStorage).then(() => {
-      console.log("urls", this.state.urls);
 
-      this.pushData(this.state.urls);
-    });
+    Promise.all(storeFileStorage).then(() => {
+      Promise.all(
+      uploadUrl.map((item,index)=>{
+        return  item.getDownloadURL().then(function(downloadURL) {
+            urls[index].url= downloadURL
+            that.setState({ urls ,completed:0});
+          });
+        })
+      ).then(()=>{
+        console.log("urls", this.state.urls);
+        this.pushData(this.state.urls);
+      });
+    })
   };
 
   pushData = urls => {
