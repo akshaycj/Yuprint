@@ -78,11 +78,7 @@ export default class Card extends Component {
           <Tag>GeekBlue</Tag>
         </div>
         <div className="expand-button-container" onClick={this.handleExpand}>
-          <Icon
-            style={{ marginLeft: "auto", marginTop: "auto" }}
-            type="caret-down"
-            theme="filled"
-          />
+          <Icon type="caret-down" theme="filled" />
         </div>
         {/* <button className="button-openfile">
           <Icon type="download" />
