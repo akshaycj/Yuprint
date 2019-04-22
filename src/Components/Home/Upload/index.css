@@ -7,7 +7,7 @@
   min-height: 100%;
   height: auto;
   overflow-y: auto;
-  justify-content: flex-start;
+  /* justify-content: flex-start; */
 }
 
 /* MAPBOX START */
@@ -33,6 +33,7 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+  padding: 10px;
 }
 .upload-button {
   padding: 5px;

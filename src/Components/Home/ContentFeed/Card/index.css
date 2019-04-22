@@ -1,17 +1,18 @@
 .card-container {
-  height: 115px;
+  min-height: 70px;
   overflow: hidden;
   width: 100%;
   border-radius: 5px;
-  background-color: #5f6ae71a;
+  /* background-color: #5f6ae71a; */
   align-items: center;
   justify-content: center;
   margin: 5px;
   padding: 10px;
   position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-.card-container:hover {
+/* .card-container:hover {
   background: linear-gradient(to right, #8e54e9, #4776e6);
   color: white;
   cursor: pointer;
@@ -20,7 +21,7 @@
 .card-container:focus {
   background: linear-gradient(to right, #8e54e9, #4776e6);
   color: white;
-}
+} */
 
 .card-container p {
   word-break: break-all;

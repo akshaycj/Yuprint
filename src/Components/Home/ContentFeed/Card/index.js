@@ -1,19 +1,21 @@
 import React, { Component } from "react";
 import "./index.css";
-import { Modal, Button, Icon } from "antd";
+import { Modal, Button, Tag } from "antd";
 import { Redirect } from "react-router-dom";
+import Collapse from "react-collapse";
 
 export default class Card extends Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
-      redirect: false
+      redirect: false,
+      open: false
     };
   }
 
   handleModal = () => {
-    this.setState({ visible: true });
+    this.setState({ open: !this.state.open });
   };
 
   handleCancel = () => {
@@ -28,7 +30,7 @@ export default class Card extends Component {
 
   render() {
     const { item } = this.props;
-    const { visible, redirect } = this.state;
+    const { visible, redirect, open } = this.state;
     return (
       <div className="card-container" onClick={this.handleModal}>
         <Modal
@@ -48,12 +50,41 @@ export default class Card extends Component {
           {item.description}
         </Modal>
 
-        <h3>{item.title}</h3>
-        <p>
-          {item.description.slice(0, 105) +
-            (item.description.length > 105 ? "..." : "")}
-        </p>
-
+        <h3>{item.title.charAt(0).toUpperCase() + item.title.slice(1)}</h3>
+        <h5 style={{ color: "rgba(0, 0, 0, 0.5)" }}>Category: Notes</h5>
+        <Collapse isOpened={open}>
+          {/* <p>
+            {item.description.slice(0, 105) +
+              (item.description.length > 105 ? "..." : "")}
+          </p> */}
+          <div>{item.description}</div>
+        </Collapse>
+        <div>
+          <Tag
+            color="green"
+            style={{ borderStyle: "dashed", background: "#fff" }}
+          >
+            geekblue
+          </Tag>
+          <Tag
+            color="green"
+            style={{ borderStyle: "dashed", background: "#fff" }}
+          >
+            geekblue
+          </Tag>
+          <Tag
+            color="green"
+            style={{ borderStyle: "dashed", background: "#fff" }}
+          >
+            geekblue
+          </Tag>
+          <Tag
+            color="green"
+            style={{ borderStyle: "dashed", background: "#fff" }}
+          >
+            geekblue
+          </Tag>
+        </div>
         {/* <button className="button-openfile">
           <Icon type="download" />
         </button> */}
