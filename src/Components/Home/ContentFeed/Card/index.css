@@ -9,7 +9,27 @@
   margin: 5px;
   padding: 10px;
   position: relative;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15);
+}
+.card-container > .inner-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-container > .tag-group > .ant-tag {
+  border: dashed 1px #13c2c2;
+  background: #fff;
+  color: #13c2c2;
+}
+
+.description-container {
+  margin-left: 5px;
+}
+
+.expand-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* .card-container:hover {
