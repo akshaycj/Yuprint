@@ -65,13 +65,13 @@ export default class Home extends Component {
           className="container"
         >
           <TabPane className="upload-home-tab" tab="Tab 1" key="print">
-            <UploadHome />
+            <UploadHome type="print" />
           </TabPane>
           <TabPane className="content-tab" tab="Tab 2" key="content">
             <ContentFeed />
           </TabPane>
           <TabPane tab="Tab 2" key="upload">
-            <ContentCreator />
+            <UploadHome type="upload" />
           </TabPane>
         </Tabs>
       </div>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload, Input, message, TimePicker, DatePicker, Radio } from "antd";
+import { Upload, Input, message } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
@@ -9,6 +9,8 @@ import UploadList from "./UploadList";
 import loadingIcon from "../../../Res/ball-triangle.svg";
 import MapBox from "../MapBox/MapBox";
 import moment from "moment";
+import PrintInstruction from "./PrintInstruction";
+import ContentUploadDescription from "./ContentUploadDescription";
 
 const Fragment = React.Fragment;
 
@@ -27,8 +29,8 @@ class UploadHome extends Component {
       pending: 0,
       completed: 0,
       progress: 0,
-      id: this.props.user.uid || "test user id",
-      mobile: this.props.user.mobile,
+      id: props.user.uid || "test user id",
+      mobile: props.user.mobile,
       onNext: false,
       geoPosition: null,
       address1: "",
@@ -36,17 +38,21 @@ class UploadHome extends Component {
       asap: true,
       scheduleTime: null,
       scheduleDate: null,
-      uploadUrl:[]
+      uploadUrl: [],
+      title: "",
+      tags: ["Tag 1"],
+      inputVisible: false,
+      inputValue: ""
     };
   }
   componentDidMount() {
-    console.log("props", this.props.user);
+    //console.log("props", this.props.user);
   }
 
   handleUpload = () => {
-    var { id, fileList, completed ,uploadUrl } = this.state;
+    var { id, fileList, completed, uploadUrl } = this.state;
     this.setState({ loading: true, pending: fileList.length });
-    let urls = []
+    let urls = [];
     var that = this;
     let storeFileStorage = fileList.map((item, index) => {
       let uploadFile = storage
@@ -71,33 +77,32 @@ class UploadHome extends Component {
           console.error("Something nasty happened", error);
         },
         () => {
-          uploadUrl[index]=uploadFile.snapshot.ref
-          urls[index] ={
+          uploadUrl[index] = uploadFile.snapshot.ref;
+          urls[index] = {
             ...urls[index],
-            type:item.paperSize,
-            color:item.color
-          }
+            type: item.paperSize,
+            color: item.color
+          };
           completed = completed + 1;
-          that.setState({uploadUrl, completed });
+          that.setState({ uploadUrl, completed });
         }
       );
       return uploadFile;
     });
 
-
     Promise.all(storeFileStorage).then(() => {
       Promise.all(
-      uploadUrl.map((item,index)=>{
-        return  item.getDownloadURL().then(function(downloadURL) {
-            urls[index].url= downloadURL
-            that.setState({ urls ,completed:0});
+        uploadUrl.map((item, index) => {
+          return item.getDownloadURL().then(function(downloadURL) {
+            urls[index].url = downloadURL;
+            that.setState({ urls, completed: 0 });
           });
         })
-      ).then(()=>{
+      ).then(() => {
         console.log("urls", this.state.urls);
         this.pushData(this.state.urls);
       });
-    })
+    });
   };
 
   pushData = urls => {
@@ -243,18 +248,59 @@ class UploadHome extends Component {
     }
   };
 
+  handleTitleChange = e => {
+    this.setState({ title: e.target.value });
+  };
   render() {
-    const RadioGroup = Radio.Group;
     const {
       fileList,
       loading,
       progress,
       pending,
       completed,
-      onNext
+      onNext,
+      asap,
+      scheduleDate,
+      scheduleTime,
+      description,
+      title,
+      inputValue,
+      inputVisible
     } = this.state;
+    const {
+      handleDescriptionChange,
+      handleTitleChange,
+      handleTimeRadioChange,
+      handleDateChange,
+      handleTimeChange,
+      handleSizeChange,
+      handleColorChange,
+      handleDelete
+    } = this;
 
-    const { TextArea } = Input;
+    const type = this.props.type;
+
+    const printData = [
+      {
+        title: "Upload to print",
+        content: "You can upload multiple files at the same time",
+        src:
+          "https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg",
+        color: "#13C2C2",
+        shadowColor: "rgba(19,194,194,.12)",
+        icon: "cloud-upload"
+      }
+    ];
+    const contentData = [
+      {
+        title: "Upload your files",
+        content: "Earn 5% incentive everytime someone takes a print!",
+        color: "#F5222D",
+        shadowColor: "rgba(245,34,45,.12)",
+        icon: "book"
+      }
+    ];
+
     return (
       <div className="home-main">
         {loading ? (
@@ -274,7 +320,9 @@ class UploadHome extends Component {
                 multiple={true}
                 beforeUpload={this.beforeUpload}
               >
-                <UploadButton />
+                <UploadButton
+                  data={type === "print" ? printData : contentData}
+                />
               </Upload>
             ) : (
               <Fragment>
@@ -322,40 +370,36 @@ class UploadHome extends Component {
                 ) : (
                   <Fragment>
                     <UploadList
-                      fileList={fileList}
-                      handleSizeChange={this.handleSizeChange}
-                      handleColorChange={this.handleColorChange}
-                      handleDelete={this.handleDelete}
+                      {...{
+                        fileList,
+                        handleColorChange,
+                        handleSizeChange,
+                        handleDelete
+                      }}
                     />
-                    <div className="timeRadioContainer">
-                      <RadioGroup
-                        name="timeRadio"
-                        onChange={this.handleTimeRadioChange}
-                        defaultValue={this.state.asap ? 0 : 1}
-                      >
-                        <Radio value={0}>ASAP</Radio>
-                        <Radio value={1}>SCHEDULE</Radio>
-                      </RadioGroup>
-                    </div>
-                    <div className="dateAndTime">
-                      <DatePicker
-                        onChange={this.handleDateChange}
-                        value={this.state.scheduleDate}
-                        disabled={this.state.asap}
+                    {type === "print" ? (
+                      <PrintInstruction
+                        {...{
+                          asap,
+                          scheduleDate,
+                          scheduleTime,
+                          description,
+                          handleTimeRadioChange,
+                          handleDateChange,
+                          handleTimeChange,
+                          handleDescriptionChange
+                        }}
                       />
-                      <TimePicker
-                        onChange={this.handleTimeChange}
-                        value={this.state.scheduleTime}
-                        disabled={this.state.asap}
+                    ) : (
+                      <ContentUploadDescription
+                        {...{
+                          title,
+                          description,
+                          handleTitleChange,
+                          handleDescriptionChange
+                        }}
                       />
-                    </div>
-                    <TextArea
-                      rows={4}
-                      style={{ marginBottom: 20 }}
-                      placeholder="Printing instructions"
-                      value={this.state.description}
-                      onChange={this.handleDescriptionChange}
-                    />
+                    )}
                     <div className="upload-button-group">
                       <div
                         className="upload-button cancel-button"

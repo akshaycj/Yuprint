@@ -1,19 +1,15 @@
 import React, { Component } from "react";
-import {
-  Upload,
-  Icon,
-  Input,
-  Button,
-  message,
-  Select,
-  List,
-  Spin,
-  Tag
-} from "antd";
+import { Upload, Icon, Input, Button, message, Select, Spin, Tag } from "antd";
 import { TweenOneGroup } from "rc-tween-one";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
+import UploadButton from "../UploadButton";
+import UploadList from "../Upload/UploadList";
+import loadingIcon from "../../../Res/ball-triangle.svg";
+import ProgressIndicator from "../Upload/ProgressIndicator";
+
+const Fragment = React.Fragment;
 
 export default props => (
   <Consumer>{({ user }) => <ContentCreator {...props} user={user} />}</Consumer>
@@ -29,7 +25,10 @@ class ContentCreator extends Component {
       title: "",
       tags: ["Tag 1"],
       inputVisible: false,
-      inputValue: ""
+      inputValue: "",
+      progress: 0,
+      completed: 0,
+      pending: 0
     };
   }
   handleUpload = () => {
@@ -163,23 +162,55 @@ class ContentCreator extends Component {
     );
   };
   render() {
-    const { fileList, loading } = this.state;
+    const { fileList, loading, progress, pending, completed } = this.state;
     const Option = Select.Option;
     const { TextArea } = Input;
-    const { tags, inputVisible, inputValue, title,description } = this.state;
+    const { tags, inputVisible, inputValue, title, description } = this.state;
     const tagChild = tags.map(this.forMap);
+    const data = [
+      {
+        title: "Upload your files",
+        content: "Earn 5% incentive everytime someone takes a print !",
+        color: "#F5222D",
+        shadowColor: "rgba(245,34,45,.12)",
+        icon: "book"
+      }
+    ];
     return (
       <div className="content-creator-main">
-        <Upload
-          showUploadList={false}
-          multiple={true}
-          beforeUpload={this.beforeUpload}
-        >
-          <Button>
-            <Icon type="upload" /> click to select items
-          </Button>
-        </Upload>
-        <div className="list-container">
+        {loading ? (
+          <Fragment>
+            <img src={loadingIcon} alt="loading" />
+            <ProgressIndicator
+              progress={progress}
+              completed={completed}
+              pending={pending}
+            />
+          </Fragment>
+        ) : (
+          <Fragment>
+            {fileList.length === 0 ? (
+              <Upload
+                showUploadList={false}
+                multiple={true}
+                beforeUpload={this.beforeUpload}
+              >
+                <UploadButton data={data} />
+              </Upload>
+            ) : (
+              <Fragment>
+                <UploadList
+                  fileList={fileList}
+                  handleSizeChange={this.handleSizeChange}
+                  handleColorChange={this.handleColorChange}
+                  handleDelete={this.handleDelete}
+                />
+              </Fragment>
+            )}
+          </Fragment>
+        )}
+
+        {/* <div className="list-container">
           <List
             className="list"
             itemLayout="horizontal"
@@ -206,7 +237,7 @@ class ContentCreator extends Component {
               </List.Item>
             )}
           />
-        </div>
+        </div> */}
         <Input
           placeholder="title"
           style={{ marginBottom: "5%" }}

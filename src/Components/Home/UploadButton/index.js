@@ -6,15 +6,15 @@ import "./index.less";
 
 const { TweenOneGroup } = TweenOne;
 
-const featuresCN = [
-  {
-    title: "Upload to print",
-    content: "You can upload multiple files at the same time",
-    src: "https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg",
-    color: "#13C2C2",
-    shadowColor: "rgba(19,194,194,.12)"
-  }
-];
+// const featuresCN = [
+//   {
+//     title: "Upload to print",
+//     content: "You can upload multiple files at the same time",
+//     src: "https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg",
+//     color: "#13C2C2",
+//     shadowColor: "rgba(19,194,194,.12)"
+//   }
+// ];
 
 const pointPos = [
   { x: -30, y: -10 },
@@ -32,8 +32,15 @@ export default class UploadButton extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      hoverNum: 0
+      hoverNum: 0,
+      featuresCN: []
     };
+  }
+  componentDidMount() {
+    var data = this.props.data;
+    if (data) {
+      this.setState({ featuresCN: data });
+    }
   }
   onMouseOver = i => {
     this.setState({
@@ -67,7 +74,7 @@ export default class UploadButton extends React.PureComponent {
     ];
   };
   render() {
-    const { hoverNum } = this.state;
+    const { hoverNum, featuresCN } = this.state;
     let children = [[], [], []];
     featuresCN.forEach((item, i) => {
       const isHover = hoverNum === i;
@@ -120,9 +127,11 @@ export default class UploadButton extends React.PureComponent {
             }}
           >
             <Icon
-              type="cloud-upload"
-              style={{ fontSize: 26, color: "#13C2C2" }}
+              type={item.icon}
+              style={{ fontSize: 26, color: item.color }}
             />
+            {/* {  theme="twoTone"
+              twoToneColor={item.color}} */}
           </div>
           <h3>{item.title}</h3>
           <p>{item.content}</p>
