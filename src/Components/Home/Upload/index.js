@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload, Input, message, Tag } from "antd";
+import { Upload, message, Tag } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
@@ -7,10 +7,10 @@ import UploadButton from "./../UploadButton/index";
 import ProgressIndicator from "./ProgressIndicator";
 import UploadList from "./UploadList";
 import loadingIcon from "../../../Res/ball-triangle.svg";
-import MapBox from "../MapBox/MapBox";
 import moment from "moment";
 import PrintInstruction from "./PrintInstruction";
 import ContentUploadDescription from "./ContentUploadDescription";
+import LocationDetails from "./LocationDetails";
 
 const Fragment = React.Fragment;
 
@@ -289,6 +289,10 @@ class UploadHome extends Component {
       </span>
     );
   };
+
+  onNextPrev = val => {
+    this.setState({ onNext: val });
+  };
   render() {
     const {
       fileList,
@@ -304,7 +308,9 @@ class UploadHome extends Component {
       title,
       inputValue,
       inputVisible,
-      tags
+      tags,
+      address1,
+      address2
     } = this.state;
     const {
       handleDescriptionChange,
@@ -318,10 +324,15 @@ class UploadHome extends Component {
       saveInputRef,
       handleTagInputChange,
       handleTagInputConfirm,
-      showInput
+      showInput,
+      setGeoPosition,
+      inputChange,
+      validateData,
+      onNextPrev
     } = this;
 
     const type = this.props.type;
+    const print = type === "print" ? true : false;
     const tagChild = tags.map(this.forMap);
     const printData = [
       {
@@ -365,52 +376,24 @@ class UploadHome extends Component {
                 multiple={true}
                 beforeUpload={this.beforeUpload}
               >
-                <UploadButton
-                  data={type === "print" ? printData : contentData}
-                />
+                <UploadButton data={print ? printData : contentData} />
               </Upload>
             ) : (
               <Fragment>
                 {onNext ? (
                   <Fragment>
-                    <div className="map-content">
-                      <MapBox setGeoPosition={this.setGeoPosition} />
-                    </div>
-                    <div className="address-container">
-                      <h5 style={{ color: "red" }}>
-                        *Currently available only near CUSAT
-                      </h5>
-                      <Input
-                        type="text"
-                        placeholder="Door No. / Flat"
-                        name="address1"
-                        onChange={this.inputChange}
-                        value={this.state.address1}
+                    {print ? (
+                      <LocationDetails
+                        {...{
+                          address1,
+                          address2,
+                          inputChange,
+                          setGeoPosition,
+                          validateData,
+                          onNextPrev
+                        }}
                       />
-                      <Input
-                        type="text"
-                        placeholder="Landmark, Locality"
-                        name="address2"
-                        onChange={this.inputChange}
-                        value={this.state.address2}
-                      />
-                      <div className="upload-button-group">
-                        <div
-                          className="upload-button upload-button-border"
-                          onClick={() => {
-                            this.setState({ onNext: false });
-                          }}
-                        >
-                          Prev
-                        </div>{" "}
-                        <div
-                          className="upload-button upload-button-back"
-                          onClick={this.validateData}
-                        >
-                          Done
-                        </div>
-                      </div>
-                    </div>
+                    ) : null}
                   </Fragment>
                 ) : (
                   <Fragment>
@@ -423,7 +406,7 @@ class UploadHome extends Component {
                         handleDelete
                       }}
                     />
-                    {type === "print" ? (
+                    {print ? (
                       <PrintInstruction
                         {...{
                           asap,
