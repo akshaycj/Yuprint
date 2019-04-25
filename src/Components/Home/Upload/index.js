@@ -416,6 +416,7 @@ class UploadHome extends Component {
                   <Fragment>
                     <UploadList
                       {...{
+                        type,
                         fileList,
                         handleColorChange,
                         handleSizeChange,
