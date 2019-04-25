@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload, Input, message } from "antd";
+import { Upload, Input, message, Tag } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
@@ -40,7 +40,7 @@ class UploadHome extends Component {
       scheduleDate: null,
       uploadUrl: [],
       title: "",
-      tags: ["Tag 1"],
+      tags: [],
       inputVisible: false,
       inputValue: ""
     };
@@ -251,6 +251,44 @@ class UploadHome extends Component {
   handleTitleChange = e => {
     this.setState({ title: e.target.value });
   };
+  saveInputRef = input => (this.input = input);
+
+  handleTagInputChange = e => {
+    this.setState({ inputValue: e.target.value });
+  };
+  handleTagClose = removedTag => {
+    const tags = this.state.tags.filter(tag => tag !== removedTag);
+    this.setState({ tags });
+  };
+  showInput = () => {
+    this.setState({ inputVisible: true }, () => this.input.focus());
+  };
+  handleTagInputConfirm = () => {
+    const { inputValue } = this.state;
+    let { tags } = this.state;
+    if (inputValue && tags.indexOf(inputValue) === -1) {
+      tags = [...tags, inputValue];
+    }
+    this.setState({ tags, inputVisible: false, inputValue: "" });
+  };
+  forMap = tag => {
+    const tagElem = (
+      <Tag
+        closable
+        onClose={e => {
+          e.preventDefault();
+          this.handleTagClose(tag);
+        }}
+      >
+        {tag}
+      </Tag>
+    );
+    return (
+      <span key={tag} style={{ display: "inline-block" }}>
+        {tagElem}
+      </span>
+    );
+  };
   render() {
     const {
       fileList,
@@ -265,7 +303,8 @@ class UploadHome extends Component {
       description,
       title,
       inputValue,
-      inputVisible
+      inputVisible,
+      tags
     } = this.state;
     const {
       handleDescriptionChange,
@@ -275,11 +314,15 @@ class UploadHome extends Component {
       handleTimeChange,
       handleSizeChange,
       handleColorChange,
-      handleDelete
+      handleDelete,
+      saveInputRef,
+      handleTagInputChange,
+      handleTagInputConfirm,
+      showInput
     } = this;
 
     const type = this.props.type;
-
+    const tagChild = tags.map(this.forMap);
     const printData = [
       {
         title: "Upload to print",
@@ -307,9 +350,11 @@ class UploadHome extends Component {
           <Fragment>
             <img src={loadingIcon} alt="loading" />
             <ProgressIndicator
-              progress={progress}
-              completed={completed}
-              pending={pending}
+              {...{
+                progress,
+                completed,
+                pending
+              }}
             />
           </Fragment>
         ) : (
@@ -395,8 +440,15 @@ class UploadHome extends Component {
                         {...{
                           title,
                           description,
+                          inputValue,
+                          inputVisible,
+                          tagChild,
                           handleTitleChange,
-                          handleDescriptionChange
+                          handleDescriptionChange,
+                          saveInputRef,
+                          handleTagInputChange,
+                          handleTagInputConfirm,
+                          showInput
                         }}
                       />
                     )}
