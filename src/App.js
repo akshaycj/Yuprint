@@ -7,6 +7,7 @@ import Provider from "./Context/DataContext";
 import Signup from "./Components/Signup";
 import Otp from "./Components/Otp";
 import SinglePage from "./Components/SinglePage";
+import UserOrder from "./Components/UserOrder";
 
 class App extends Component {
   render() {
@@ -19,6 +20,7 @@ class App extends Component {
             <Route path="/signup" exact component={Signup} />
             <Route path="/otp" exact component={Otp} />
             <Route path="/singlepage/:id" exact component={SinglePage} />
+            <Route path="/order" exact component={UserOrder} />
           </Switch>
         </Provider>
       </BrowserRouter>

@@ -92,6 +92,13 @@ class SinglePage extends React.Component {
       scheduleTime: moment(scheduleTime).format("LT")
     };
     console.log('data',data);
+    db.ref("userOrder")
+      .child(id)
+      .push(data, err => {
+        if (err) {
+          message.error("upload failed.");
+        }
+      });
     db.ref("store")
       .child("orders")
       .child("active")
