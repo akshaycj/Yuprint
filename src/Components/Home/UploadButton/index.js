@@ -26,9 +26,6 @@ const pointPos = [
 ];
 
 export default class UploadButton extends React.PureComponent {
-  static propTypes = {
-    isMobile: PropTypes.bool.isRequired
-  };
   constructor(props) {
     super(props);
     this.state = {
@@ -98,6 +95,7 @@ export default class UploadButton extends React.PureComponent {
       ));
       const child = (
         <div
+          key={i}
           className="page1-box"
           onMouseEnter={() => {
             this.onMouseOver(i);
@@ -114,7 +112,7 @@ export default class UploadButton extends React.PureComponent {
               duration: 300,
               ease: "easeInBack"
             }}
-            resetStyleBool={false}
+            resetStyle={false}
           >
             {(this.props.isMobile || isHover) && pointChild}
           </TweenOneGroup>

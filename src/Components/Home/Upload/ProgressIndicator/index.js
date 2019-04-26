@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Progress } from "antd";
 
 export default ({ progress, completed, pending }) => (

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import { DatePicker, TimePicker, Input, Radio } from "antd";
 
 const { TextArea } = Input;

@@ -193,7 +193,7 @@ class SinglePage extends React.Component {
       <div className="main-container">
         <div className="navbar">
           <Icon onClick={this.goBack} type="arrow-left" />
-          <img src={logo} />
+          <img alt="logo" src={logo} />
         </div>
         {!onNext ? (
           <div className="contentMainContainer">
@@ -208,7 +208,7 @@ class SinglePage extends React.Component {
                   message.success("URL copied to clipboard");
                 }}
               >
-                <img src={share} />
+                <img alt="share" src={share} />
               </CopyToClipboard>
             </div>
             {/* <div className="tagsContainer">
@@ -221,8 +221,8 @@ class SinglePage extends React.Component {
             <div>
               <h4>Cateory</h4>
               <div className="tag-group">
-                {data.tags.map(item => (
-                  <Tag>{item}</Tag>
+                {data.tags.map((item, i) => (
+                  <Tag key={i}>{item}</Tag>
                 ))}
               </div>
             </div>

@@ -51,17 +51,24 @@ class UploadHome extends Component {
   }
 
   handleUpload = () => {
-    var { id, fileList, completed, uploadUrl } = this.state;
+    var { id, fileList, completed, uploadUrl, type } = this.state;
+
     this.setState({ loading: true, pending: fileList.length });
+    const print = type === "print" ? true : false;
     let urls = [];
-    var that = this;
-    let storeFileStorage = fileList.map((item, index) => {
-      let uploadFile = storage
-        .ref("files")
-        .child("users")
-        .child(id)
-        .child(item.name)
-        .put(item);
+    const that = this;
+    const storeFileStorage = fileList.map((item, index) => {
+      const uploadFile = print
+        ? storage
+            .ref("files")
+            .child("users")
+            .child(id)
+            .child(item.name)
+            .put(item)
+        : storage
+            .ref("global-content")
+            .child(item.name)
+            .put(item);
 
       uploadFile.on(
         "state_changed",
@@ -100,7 +107,7 @@ class UploadHome extends Component {
           });
         })
       ).then(() => {
-        console.log("urls", this.state.urls);
+        //console.log("urls", this.state.urls);
         this.pushData(this.state.urls);
       });
     });
@@ -115,9 +122,15 @@ class UploadHome extends Component {
       geoPosition,
       asap,
       scheduleDate,
-      scheduleTime
+      scheduleTime,
+      type,
+      title,
+      tags
     } = this.state;
-    var data = {
+
+    const print = type === "print" ? true : false;
+
+    var printData = {
       description: description,
       user: id || "test user",
       mobile: this.props.user.phoneNumber || "test mobileNo",
@@ -131,19 +144,43 @@ class UploadHome extends Component {
       scheduleDate: moment(scheduleDate).format("L"),
       scheduleTime: moment(scheduleTime).format("LT")
     };
-    console.log("data", data);
+    //console.log("data", data);
+    var contentData = {
+      title: title,
+      description: description,
+      uid: id,
+      user: this.props.user.displayName,
+      type: "Notes",
+      urls: urls,
+      tags: tags,
+      verified: false
+    };
 
-    db.ref("store")
-      .child("orders")
-      .child("active")
-      .push(data, err => {
-        if (err) {
-          message.error("upload failed.");
-        } else {
-          message.success("upload successful");
-        }
-        this.onClear();
-      });
+    print
+      ? db
+          .ref("store")
+          .child("orders")
+          .child("active")
+          .push(printData, err => {
+            if (err) {
+              message.error("upload failed.");
+            } else {
+              message.success("upload successful");
+            }
+            this.onClear();
+          })
+      : db
+          .ref("content")
+          .child("users")
+          .child("Notes")
+          .push(contentData, err => {
+            if (err) {
+              message.error("upload failed.");
+            } else {
+              message.success("upload successful");
+            }
+            this.onClear();
+          });
   };
 
   onClear = () => {
@@ -151,7 +188,9 @@ class UploadHome extends Component {
       loading: false,
       fileList: [],
       description: "",
-      onNext: false
+      onNext: false,
+      title: "",
+      tags: []
     });
   };
   handleDelete = index => {
@@ -323,6 +362,7 @@ class UploadHome extends Component {
       handleSizeChange,
       handleColorChange,
       handleDelete,
+      handleUpload,
       saveInputRef,
       handleTagInputChange,
       handleTagInputConfirm,
@@ -402,7 +442,7 @@ class UploadHome extends Component {
                       </div>{" "}
                       <div
                         className="upload-button upload-button-back"
-                        onClick={validateData}
+                        onClick={print ? validateData : handleUpload}
                       >
                         Done
                       </div>

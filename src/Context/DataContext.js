@@ -16,7 +16,7 @@ export default class Provider extends Component {
   componentDidMount() {
     auth.onAuthStateChanged(user => {
       if (user) {
-        console.log("user", user);
+        //console.log("user", user);
 
         this.setState({ user });
       }

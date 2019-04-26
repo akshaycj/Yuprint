@@ -163,7 +163,7 @@ class ContentCreator extends Component {
   };
   render() {
     const { fileList, loading, progress, pending, completed } = this.state;
-    const Option = Select.Option;
+    //const Option = Select.Option;
     const { TextArea } = Input;
     const { tags, inputVisible, inputValue, title, description } = this.state;
     const tagChild = tags.map(this.forMap);

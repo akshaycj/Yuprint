@@ -38,7 +38,7 @@ class ContentCreator extends Component {
           feedData.push(data);
         });
         this.setState({ feedData });
-        console.log(feedData);
+        //console.log(feedData);
       });
   }
 
