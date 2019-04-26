@@ -155,32 +155,35 @@ class UploadHome extends Component {
       tags: tags,
       verified: false
     };
+    if (print) {
+      db.ref("userOrder")
+        .child(id)
+        .push(printData);
 
-    print
-      ? db
-          .ref("store")
-          .child("orders")
-          .child("active")
-          .push(printData, err => {
-            if (err) {
-              message.error("upload failed.");
-            } else {
-              message.success("upload successful");
-            }
-            this.onClear();
-          })
-      : db
-          .ref("content")
-          .child("users")
-          .child("Notes")
-          .push(contentData, err => {
-            if (err) {
-              message.error("upload failed.");
-            } else {
-              message.success("upload successful");
-            }
-            this.onClear();
-          });
+      db.ref("store")
+        .child("orders")
+        .child("active")
+        .push(printData, err => {
+          if (err) {
+            message.error("upload failed.");
+          } else {
+            message.success("upload successful");
+          }
+          this.onClear();
+        });
+    } else {
+      db.ref("content")
+        .child("users")
+        .child("Notes")
+        .push(contentData, err => {
+          if (err) {
+            message.error("upload failed.");
+          } else {
+            message.success("upload successful");
+          }
+          this.onClear();
+        });
+    }
   };
 
   onClear = () => {
