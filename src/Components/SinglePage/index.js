@@ -20,6 +20,7 @@ import MapBox from "../Home/MapBox/MapBox";
 import moment from "moment";
 import logo from "../../Res/logo.svg";
 import share from "../../Res/share.svg";
+import { Document, Page, pdfjs } from "react-pdf";
 
 export default props => (
   <Consumer>
@@ -48,25 +49,35 @@ class SinglePage extends React.Component {
       scheduleTime: null,
       description: "",
       size: "A4",
-      color: "black and white"
+      color: "Black and White",
+      numPages: null,
+      pageNumber: 1
     };
   }
 
   componentDidMount() {
-    console.log("props", this.props);
-    if (this.props.match.params.id) {
+    //console.log("props", this.props);
+    var id = this.props.match.params.id;
+    if (id) {
       db.ref("content")
         .child("users")
         .child("Notes")
-        .child(this.props.match.params.id)
+        .child(id)
         .on("value", item => {
           let data = item.val();
           data.key = item.key;
           console.log(data);
-          this.setState({ data: data, shareUrl: window.location.href });
+          this.setState({ data, shareUrl: window.location.href });
+          this.loadpdf(data);
         });
     }
   }
+
+  loadpdf = data => {
+    pdfjs.getDocument(data.url).then(pdf => {
+      console.log("pdf", pdf.numPages);
+    });
+  };
 
   goBack = () => {
     this.setState({ redirect: true });
@@ -104,7 +115,7 @@ class SinglePage extends React.Component {
       scheduleDate: moment(scheduleDate).format("L"),
       scheduleTime: moment(scheduleTime).format("LT")
     };
-    console.log("data", data);
+    //console.log("data", data);
     db.ref("userOrder")
       .child(id)
       .push(data, err => {
@@ -190,8 +201,21 @@ class SinglePage extends React.Component {
   };
   copyUrl = () => {};
 
+  onDocumentLoadSuccess = ({ numPages }) => {
+    console.log("num", numPages);
+
+    this.setState({ numPages });
+  };
+
   render() {
-    const { data, onNext, proceed, shareUrl } = this.state;
+    const {
+      data,
+      onNext,
+      proceed,
+      shareUrl,
+      pageNumber,
+      numPages
+    } = this.state;
     const RadioGroup = Radio.Group;
     const { TextArea } = Input;
     const Option = Select.Option;
@@ -233,6 +257,12 @@ class SinglePage extends React.Component {
                 ))}
               </div>
             </div>
+            {/* <Document
+              file={data.url}
+              onLoadSuccess={this.onDocumentLoadSuccess}
+            >
+              <Page pageNumber={pageNumber} />
+            </Document> */}
             <div className="buttonsContainer">
               <Button
                 onClick={this.handleNext}

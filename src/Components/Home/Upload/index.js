@@ -11,6 +11,7 @@ import moment from "moment";
 import PrintInstruction from "./PrintInstruction";
 import ContentUploadDescription from "./ContentUploadDescription";
 import LocationDetails from "./LocationDetails";
+import { pdfjs } from "react-pdf";
 
 const Fragment = React.Fragment;
 
@@ -242,12 +243,15 @@ class UploadHome extends Component {
       );
       return false;
     }
-
-    file.paperSize = "A4";
-    file.color = "Black and White";
-    this.setState(state => ({
-      fileList: [...state.fileList, file]
-    }));
+    var that = this;
+    pdfjs.getDocument(URL.createObjectURL(file)).then(({ numPages }) => {
+      file.paperSize = "A4";
+      file.pages = numPages;
+      file.color = "Black and White";
+      that.setState(state => ({
+        fileList: [...state.fileList, file]
+      }));
+    });
 
     return false;
   };
@@ -373,7 +377,8 @@ class UploadHome extends Component {
       setGeoPosition,
       inputChange,
       validateData,
-      onNextPrev
+      onNextPrev,
+      goToNext
     } = this;
 
     const print = type === "print" ? true : false;
@@ -501,9 +506,7 @@ class UploadHome extends Component {
                       </div>{" "}
                       <div
                         className="upload-button upload-button-border"
-                        onClick={() => {
-                          this.setState({ onNext: true });
-                        }}
+                        onClick={goToNext}
                       >
                         Next
                       </div>

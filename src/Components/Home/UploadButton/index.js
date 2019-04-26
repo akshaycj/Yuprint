@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import TweenOne from "rc-tween-one";
 import { Icon } from "antd";
 import "./index.less";
