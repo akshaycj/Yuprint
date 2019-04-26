@@ -207,6 +207,9 @@ class UploadHome extends Component {
   handleColorChange = (value, item) => {
     item.color = value;
   };
+  handleSideChange = (value, item) => {
+    item.side = value;
+  };
 
   handleTimeChange = e => {
     this.setState({
@@ -363,6 +366,7 @@ class UploadHome extends Component {
       handleDateChange,
       handleTimeChange,
       handleSizeChange,
+      handleSideChange,
       handleColorChange,
       handleDelete,
       handleUpload,
@@ -459,6 +463,7 @@ class UploadHome extends Component {
                         fileList,
                         handleColorChange,
                         handleSizeChange,
+                        handleSideChange,
                         handleDelete
                       }}
                     />
