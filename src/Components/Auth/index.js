@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import "./index.css";
 import { Icon, Spin } from "antd";
 import { provider, auth, db } from "./../../Utils/config";
@@ -108,17 +108,20 @@ export class Auth extends Component {
             </h3>
           </div>
           {redirect ? <Redirect to={path} /> : null}
-          <div
-            className={loading ? "button" : "button grad-back"}
-            onClick={this.onSignIn}
-          >
-            {loading ? (
-              <Spin style={{ marginTop: 5 }} />
-            ) : (
-              <div>
-                <Icon type="google" />
-              </div>
-            )}
+          <div className="button-container">
+            <div
+              className={loading ? "button" : "button grad-back"}
+              onClick={this.onSignIn}
+            >
+              {loading ? (
+                <Spin style={{ marginTop: 5 }} />
+              ) : (
+                <div>
+                  <Icon type="google" />
+                </div>
+              )}
+            </div>
+            <div className="signin-text">Sign in with Google to continue</div>
           </div>
         </div>
         {/* <div style={{ background: `url(${wave})` }} /> */}
