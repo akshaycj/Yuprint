@@ -8,6 +8,7 @@ export default ({
   fileList,
   handleColorChange,
   handleSizeChange,
+  handleSideChange,
   handleDelete
 }) => (
   <div className="list-container">
@@ -28,21 +29,29 @@ export default ({
           {type === "print" ? (
             <div className="dropDown-container">
               <Select
-                defaultValue="Black and White"
+                defaultValue="B/W"
                 style={{ fontSize: 12 }}
                 onChange={e => handleColorChange(e, item)}
               >
                 <Option value="Color">Color</Option>
-                <Option value="Black and White">Black and White</Option>
+                <Option value="B/W">B/W</Option>
               </Select>
               <Select
                 defaultValue="A4"
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 12, width: "20%" }}
                 onChange={e => handleSizeChange(e, item)}
               >
                 <Option value="A4">A4</Option>
                 <Option value="A3">A3</Option>
                 <Option value="A2">A2</Option>
+              </Select>
+              <Select
+                defaultValue="Single Side"
+                style={{ fontSize: 12 }}
+                onChange={e => handleSideChange(e, item)}
+              >
+                <Option value="Single Side">Single Side</Option>
+                <Option value="Double Side">Double Side</Option>
               </Select>
             </div>
           ) : null}
