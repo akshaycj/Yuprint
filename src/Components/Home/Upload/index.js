@@ -244,14 +244,17 @@ class UploadHome extends Component {
       return false;
     }
     var that = this;
-    pdfjs.getDocument(URL.createObjectURL(file)).then(({ numPages }) => {
-      file.paperSize = "A4";
-      file.pages = numPages;
-      file.color = "Black and White";
-      that.setState(state => ({
-        fileList: [...state.fileList, file]
-      }));
-    });
+    var url = URL.createObjectURL(file);
+    if (file.type === allowedMIMEType[0]) {
+      pdfjs.getDocument(url).then(({ numPages }) => {
+        file.paperSize = "A4";
+        file.pages = numPages;
+        file.color = "Black and White";
+        that.setState(state => ({
+          fileList: [...state.fileList, file]
+        }));
+      });
+    }
 
     return false;
   };

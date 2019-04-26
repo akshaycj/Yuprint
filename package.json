@@ -6,6 +6,7 @@
     "antd": "^3.16.3",
     "babel-plugin-import": "^1.11.0",
     "customize-cra": "^0.2.12",
+    "docx4js": "^3.1.30",
     "firebase": "^5.9.2",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
