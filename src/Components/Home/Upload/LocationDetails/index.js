@@ -2,14 +2,7 @@ import React, { Fragment } from "react";
 import { Input } from "antd";
 import MapBox from "./../../MapBox/MapBox";
 
-export default ({
-  address1,
-  address2,
-  inputChange,
-  setGeoPosition,
-  validateData,
-  onNextPrev
-}) => (
+export default ({ address1, address2, inputChange, setGeoPosition }) => (
   <Fragment>
     <div className="map-content">
       <MapBox setGeoPosition={setGeoPosition} />
@@ -30,20 +23,6 @@ export default ({
         onChange={inputChange}
         value={address2}
       />
-      <div className="upload-button-group">
-        <div
-          className="upload-button upload-button-border"
-          onClick={onNextPrev.bind(this, false)}
-        >
-          Prev
-        </div>{" "}
-        <div
-          className="upload-button upload-button-back"
-          onClick={validateData}
-        >
-          Done
-        </div>
-      </div>
     </div>
   </Fragment>
 );

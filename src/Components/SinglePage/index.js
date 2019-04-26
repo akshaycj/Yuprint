@@ -1,12 +1,23 @@
-import React , {Fragment} from "react";
+import React, { Fragment } from "react";
 import { Consumer } from "../../Context/DataContext";
 import "./index.css";
 import { db } from "../../Utils/config";
-import { Spin, Icon, Button, message, Input, Radio, TimePicker, DatePicker, Select } from "antd";
+import {
+  Spin,
+  Icon,
+  Button,
+  message,
+  Input,
+  Radio,
+  TimePicker,
+  DatePicker,
+  Select
+} from "antd";
 import { Redirect } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import MapBox from "../Home/MapBox/MapBox";
 import moment from "moment";
+import logo from "../../Res/logo.svg";
 
 export default props => (
   <Consumer>
@@ -25,22 +36,22 @@ class SinglePage extends React.Component {
       data: null,
       redirect: false,
       shareUrl: null,
-      onNext:false,
-      proceed:false,
+      onNext: false,
+      proceed: false,
       address1: "",
       address2: "",
       geoPosition: "",
       asap: true,
-      scheduleDate:null,
+      scheduleDate: null,
       scheduleTime: null,
-      description:"",
-      size:"A4",
-      color:'black and white'
+      description: "",
+      size: "A4",
+      color: "black and white"
     };
   }
 
   componentDidMount() {
-    console.log('props',this.props);
+    console.log("props", this.props);
     if (this.props.match.params.id) {
       db.ref("content")
         .child("users")
@@ -58,8 +69,8 @@ class SinglePage extends React.Component {
   goBack = () => {
     this.setState({ redirect: true });
   };
-  handlePrint=()=>{
-    this.setState({loading:true})
+  handlePrint = () => {
+    this.setState({ loading: true });
     var {
       description,
       id,
@@ -81,7 +92,7 @@ class SinglePage extends React.Component {
       urls: {
         url: this.state.data.url,
         type: size,
-        color:color
+        color: color
       },
       status: "active",
       address1: address1,
@@ -91,7 +102,7 @@ class SinglePage extends React.Component {
       scheduleDate: moment(scheduleDate).format("L"),
       scheduleTime: moment(scheduleTime).format("LT")
     };
-    console.log('data',data);
+    console.log("data", data);
     db.ref("store")
       .child("orders")
       .child("active")
@@ -103,7 +114,7 @@ class SinglePage extends React.Component {
         }
         this.onClear();
       });
-  }
+  };
 
   setGeoPosition = pos => {
     this.setState({ geoPosition: pos });
@@ -125,11 +136,11 @@ class SinglePage extends React.Component {
     }
   };
 
-  handleSizeChange = (e) => {
-    this.setState({size:e})
+  handleSizeChange = e => {
+    this.setState({ size: e });
   };
-  handleColorChange = (e) => {
-    this.setState({color:e})
+  handleColorChange = e => {
+    this.setState({ color: e });
   };
 
   handleTimeChange = e => {
@@ -161,17 +172,17 @@ class SinglePage extends React.Component {
       loading: false,
       description: "",
       onNext: false,
-      redirect:true
+      redirect: true
     });
   };
 
-  handleNext=()=>{
-    this.setState({onNext:true})
-  }
+  handleNext = () => {
+    this.setState({ onNext: true });
+  };
   copyUrl = () => {};
 
   render() {
-    const { data, onNext, proceed }= this.state
+    const { data, onNext, proceed } = this.state;
     const RadioGroup = Radio.Group;
     const { TextArea } = Input;
     const Option = Select.Option;
@@ -180,82 +191,86 @@ class SinglePage extends React.Component {
       <div className="main-container">
         <div className="navbar">
           <Icon onClick={this.goBack} type="arrow-left" />
+          <img src={logo} />
         </div>
-        { !onNext ? (
-        <div className="contentMainContainer">
-          <h2>{this.state.data.title}</h2>
-          <h5>
-            Uploaded by <span>{this.state.data.user}</span>
-          </h5>
-          <div className="tagsContainer">
-            {this.state.data.tags.map((tag, index) => {
-              return <code key={index}>{"#" + tag}&nbsp;</code>;
-            })}
-          </div>
-          <p>{this.state.data.description}</p>
-          <div className="buttonsContainer">
-            <CopyToClipboard
-              text={this.state.shareUrl}
-              onCopy={() => {
-                message.success("URL copied to clipboard");
-              }}
-            >
-              <Button className="upload-button upload-button-border">
-                Share
+        {!onNext ? (
+          <div className="contentMainContainer">
+            <h2>{this.state.data.title}</h2>
+            <h5>
+              Uploaded by <span>{this.state.data.user}</span>
+            </h5>
+            <div className="tagsContainer">
+              {this.state.data.tags.map((tag, index) => {
+                return <code key={index}>{"#" + tag}&nbsp;</code>;
+              })}
+            </div>
+            <p>{this.state.data.description}</p>
+            <div className="buttonsContainer">
+              <CopyToClipboard
+                text={this.state.shareUrl}
+                onCopy={() => {
+                  message.success("URL copied to clipboard");
+                }}
+              >
+                <Button className="upload-button upload-button-border">
+                  Share
+                </Button>
+              </CopyToClipboard>
+              <Button
+                onClick={this.handleNext}
+                className="upload-button upload-button-back"
+              >
+                Print
               </Button>
-            </CopyToClipboard>
-            <Button onClick={this.handleNext} className="upload-button upload-button-back">Print</Button>
-            <Button className="upload-button upload-button-border">View</Button>
+              <Button className="upload-button upload-button-border">
+                View
+              </Button>
+            </div>
           </div>
-        </div>
         ) : (
-        <Fragment>
-          {
-            proceed ?
-            (
+          <Fragment>
+            {proceed ? (
               <Fragment>
-              <div className="map-content">
-                <MapBox setGeoPosition={this.setGeoPosition} />
-              </div>
-              <div className="address-container">
-                <h5 style={{ color: "red" }}>
-                  *Currently available only near CUSAT
-                </h5>
-                <Input
-                  type="text"
-                  placeholder="Door No. / Flat"
-                  name="address1"
-                  onChange={this.inputChange}
-                  value={this.state.address1}
-                />
-                <Input
-                  type="text"
-                  placeholder="Landmark, Locality"
-                  name="address2"
-                  onChange={this.inputChange}
-                  value={this.state.address2}
-                />
-                <div className="upload-button-group">
-                  <div
-                    className="upload-button upload-button-border"
-                    onClick={() => {
-                      this.setState({ onNext: false });
-                    }}
-                  >
-                    Prev
-                  </div>{" "}
-                  <div
-                    className="upload-button upload-button-back"
-                    onClick={this.validateData}
-                  >
-                    Done
+                <div className="map-content">
+                  <MapBox setGeoPosition={this.setGeoPosition} />
+                </div>
+                <div className="address-container">
+                  <h5 style={{ color: "red" }}>
+                    *Currently available only near CUSAT
+                  </h5>
+                  <Input
+                    type="text"
+                    placeholder="Door No. / Flat"
+                    name="address1"
+                    onChange={this.inputChange}
+                    value={this.state.address1}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Landmark, Locality"
+                    name="address2"
+                    onChange={this.inputChange}
+                    value={this.state.address2}
+                  />
+                  <div className="upload-button-group">
+                    <div
+                      className="upload-button upload-button-border"
+                      onClick={() => {
+                        this.setState({ onNext: false });
+                      }}
+                    >
+                      Prev
+                    </div>{" "}
+                    <div
+                      className="upload-button upload-button-back"
+                      onClick={this.validateData}
+                    >
+                      Done
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Fragment>
-            )
-            :
-            (
+              </Fragment>
+            ) : (
               <Fragment>
                 <div className="top-content">
                   <h4 style={{ flex: 2 }}>{data.title}</h4>
@@ -325,11 +340,9 @@ class SinglePage extends React.Component {
                   </div>
                 </div>
               </Fragment>
-            )
-          }
-
-        </Fragment> )
-      }
+            )}
+          </Fragment>
+        )}
         {this.state.redirect ? <Redirect to="/home" /> : null}
       </div>
     ) : (

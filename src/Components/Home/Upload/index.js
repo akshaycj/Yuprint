@@ -42,7 +42,8 @@ class UploadHome extends Component {
       title: "",
       tags: [],
       inputVisible: false,
-      inputValue: ""
+      inputValue: "",
+      type: props.type
     };
   }
   componentDidMount() {
@@ -310,7 +311,8 @@ class UploadHome extends Component {
       inputVisible,
       tags,
       address1,
-      address2
+      address2,
+      type
     } = this.state;
     const {
       handleDescriptionChange,
@@ -331,7 +333,6 @@ class UploadHome extends Component {
       onNextPrev
     } = this;
 
-    const type = this.props.type;
     const print = type === "print" ? true : false;
     const tagChild = tags.map(this.forMap);
     const printData = [
@@ -388,12 +389,24 @@ class UploadHome extends Component {
                           address1,
                           address2,
                           inputChange,
-                          setGeoPosition,
-                          validateData,
-                          onNextPrev
+                          setGeoPosition
                         }}
                       />
                     ) : null}
+                    <div className="upload-button-group">
+                      <div
+                        className="upload-button upload-button-border"
+                        onClick={onNextPrev.bind(this, false)}
+                      >
+                        Prev
+                      </div>{" "}
+                      <div
+                        className="upload-button upload-button-back"
+                        onClick={validateData}
+                      >
+                        Done
+                      </div>
+                    </div>
                   </Fragment>
                 ) : (
                   <Fragment>

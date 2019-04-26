@@ -5,6 +5,7 @@ import { provider, auth, db } from "./../../Utils/config";
 import { Consumer } from "../../Context/DataContext";
 import { Redirect } from "react-router-dom";
 import logo from "../../Res/logo_dark.svg";
+import wave from "../../Res/wave.svg";
 
 export default props => (
   <Consumer>
@@ -77,33 +78,50 @@ export class Auth extends Component {
   render() {
     var { loading, redirect, path } = this.state;
     return (
-      <div className="auth-main">
-        <div
-          style={{
-            alignSelf: "center",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center"
-          }}
-        >
-          <img src={logo} alt='logo' style={{ width: 200, alignSelf: "center" }} />
-          <h3 style={{ color: "rgba(0, 0, 0, 0.65)", marginTop: 5 }}>
-            You Print - We Deliver
-          </h3>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          background: `url(${wave})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center bottom",
+          width: "100%"
+        }}
+      >
+        <div className="auth-main">
+          <div
+            style={{
+              alignSelf: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
+            <img
+              src={logo}
+              alt="logo"
+              style={{ width: 200, alignSelf: "center" }}
+            />
+            <h3 style={{ color: "rgba(0, 0, 0, 0.65)", marginTop: 5 }}>
+              You Print - We Deliver
+            </h3>
+          </div>
+          {redirect ? <Redirect to={path} /> : null}
+          <div
+            className={loading ? "button" : "button grad-back"}
+            onClick={this.onSignIn}
+          >
+            {loading ? (
+              <Spin style={{ marginTop: 5 }} />
+            ) : (
+              <div>
+                <Icon type="google" />
+              </div>
+            )}
+          </div>
         </div>
-        {redirect ? <Redirect to={path} /> : null}
-        <div
-          className={loading ? "button" : "button grad-back"}
-          onClick={this.onSignIn}
-        >
-          {loading ? (
-            <Spin style={{ marginTop: 5 }} />
-          ) : (
-            <div>
-              <Icon type="google" />
-            </div>
-          )}
-        </div>
+        {/* <div style={{ background: `url(${wave})` }} /> */}
       </div>
     );
   }
