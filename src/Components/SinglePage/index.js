@@ -11,13 +11,15 @@ import {
   Radio,
   TimePicker,
   DatePicker,
-  Select
+  Select,
+  Tag
 } from "antd";
 import { Redirect } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import MapBox from "../Home/MapBox/MapBox";
 import moment from "moment";
 import logo from "../../Res/logo.svg";
+import share from "../../Res/share.svg";
 
 export default props => (
   <Consumer>
@@ -182,12 +184,12 @@ class SinglePage extends React.Component {
   copyUrl = () => {};
 
   render() {
-    const { data, onNext, proceed } = this.state;
+    const { data, onNext, proceed, shareUrl } = this.state;
     const RadioGroup = Radio.Group;
     const { TextArea } = Input;
     const Option = Select.Option;
 
-    return this.state.data ? (
+    return data ? (
       <div className="main-container">
         <div className="navbar">
           <Icon onClick={this.goBack} type="arrow-left" />
@@ -195,34 +197,49 @@ class SinglePage extends React.Component {
         </div>
         {!onNext ? (
           <div className="contentMainContainer">
-            <h2>{this.state.data.title}</h2>
-            <h5>
-              Uploaded by <span>{this.state.data.user}</span>
-            </h5>
-            <div className="tagsContainer">
-              {this.state.data.tags.map((tag, index) => {
-                return <code key={index}>{"#" + tag}&nbsp;</code>;
-              })}
-            </div>
-            <p>{this.state.data.description}</p>
-            <div className="buttonsContainer">
+            <h2>{data.title.charAt(0).toUpperCase() + data.title.slice(1)}</h2>
+            <div className="share-container">
+              <h5>
+                Uploaded by <span>{data.user}</span>
+              </h5>
               <CopyToClipboard
-                text={this.state.shareUrl}
+                text={shareUrl}
                 onCopy={() => {
                   message.success("URL copied to clipboard");
                 }}
               >
-                <Button className="upload-button upload-button-border">
-                  Share
-                </Button>
+                <img src={share} />
               </CopyToClipboard>
+            </div>
+            {/* <div className="tagsContainer">
+              {data.tags.map((tag, index) => {
+                return <code key={index}>{"#" + tag}&nbsp;</code>;
+              })}
+            </div> */}
+
+            <p>{data.description}</p>
+            <div>
+              <h4>Cateory</h4>
+              <div className="tag-group">
+                {data.tags.map(item => (
+                  <Tag>{item}</Tag>
+                ))}
+              </div>
+            </div>
+            <div className="buttonsContainer">
               <Button
                 onClick={this.handleNext}
-                className="upload-button upload-button-back"
+                style={{ background: "#576EE6", color: "white" }}
+                className="upload-button "
               >
+                <Icon type="printer" />
                 Print
               </Button>
-              <Button className="upload-button upload-button-border">
+              <Button
+                style={{ background: "#8A55E8", color: "white" }}
+                className="upload-button"
+              >
+                <Icon type="file" />
                 View
               </Button>
             </div>

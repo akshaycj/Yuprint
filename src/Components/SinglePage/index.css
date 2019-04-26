@@ -18,6 +18,7 @@
   -webkit-align-self: center;
   align-self: center;
   height: 100%;
+  margin: 10px;
 }
 
 .main-container .navbar {
@@ -37,12 +38,16 @@
   width: 100px;
 }
 
-.contentMainContainer h2 {
+.contentMainContainer .share-container {
+  display: flex;
+  justify-content: space-between;
+}
+.contentMainContainer .share-container h2 {
   margin-bottom: 0;
   font-weight: 700;
 }
 
-.contentMainContainer h5 span {
+.contentMainContainer .share-container h5 span {
   font-weight: 700;
 }
 
@@ -59,11 +64,12 @@
 .contentMainContainer .buttonsContainer {
   display: flex;
   justify-content: space-around;
-  flex-direction: column;
   width: 100%;
+  flex-direction: row-reverse;
   align-content: center;
   align-items: center;
-  height: 200px;
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
 
 .map-content {

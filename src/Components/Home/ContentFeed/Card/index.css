@@ -16,10 +16,10 @@
   justify-content: space-between;
   align-items: center;
 }
-.card-container > .tag-group {
+.tag-group {
   margin-top: 3px;
 }
-.card-container > .tag-group > .ant-tag {
+.tag-group > .ant-tag {
   border: dashed 1px #13c2c2;
   background: #fff;
   color: #13c2c2;
