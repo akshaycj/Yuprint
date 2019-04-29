@@ -221,7 +221,7 @@ class SinglePage extends React.Component {
     const Option = Select.Option;
 
     return data ? (
-      <div className="main-container">
+      <div className="single-page-main-container">
         <div className="navbar">
           <Icon onClick={this.goBack} type="arrow-left" />
           <img alt="logo" src={logo} />
