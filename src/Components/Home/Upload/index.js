@@ -11,6 +11,7 @@ import moment from "moment";
 import PrintInstruction from "./PrintInstruction";
 import ContentUploadDescription from "./ContentUploadDescription";
 import LocationDetails from "./LocationDetails";
+import ConfirmOrder from "../ConfirmOrder";
 import { pdfjs } from "react-pdf";
 
 const Fragment = React.Fragment;
@@ -25,6 +26,7 @@ class UploadHome extends Component {
     this.state = {
       fileList: [],
       description: "",
+      confirmOrder: false,
       loading: false,
       urls: [],
       pending: 0,
@@ -283,7 +285,9 @@ class UploadHome extends Component {
     } else if (!this.state.address2) {
       message.error("Please enter a Landmark, Locality");
     } else {
-      this.handleUpload();
+      this.setState({
+        confirmOrder: true
+      });
     }
   };
 
@@ -350,6 +354,7 @@ class UploadHome extends Component {
     const {
       fileList,
       loading,
+      confirmOrder,
       progress,
       pending,
       completed,
@@ -413,17 +418,23 @@ class UploadHome extends Component {
 
     return (
       <div className="home-main">
-        {loading ? (
-          <Fragment>
-            <img src={loadingIcon} alt="loading" />
-            <ProgressIndicator
-              {...{
-                progress,
-                completed,
-                pending
-              }}
-            />
-          </Fragment>
+        {confirmOrder ? (
+          loading ? (
+            <Fragment>
+              <img src={loadingIcon} alt="loading" />
+              <ProgressIndicator
+                {...{
+                  progress,
+                  completed,
+                  pending
+                }}
+              />
+            </Fragment>
+          ) : (
+            <Fragment>
+              <ConfirmOrder fileList={fileList} confirmOrder={handleUpload} />
+            </Fragment>
+          )
         ) : (
           <Fragment>
             {fileList.length === 0 ? (
@@ -457,7 +468,7 @@ class UploadHome extends Component {
                       </div>{" "}
                       <div
                         className="upload-button upload-button-back"
-                        onClick={print ? validateData : handleUpload}
+                        onClick={validateData}
                       >
                         Done
                       </div>
