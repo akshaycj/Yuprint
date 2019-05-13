@@ -62,6 +62,12 @@ class UploadHome extends Component {
 
   cancelOrderhideModal = () => {
     this.setState({
+      cancelOrderModalVisible: false
+    });
+  };
+
+  cancelOrderConfirm = () => {
+    this.setState({
       fileList: [],
       description: "",
       confirmOrder: false,
@@ -427,6 +433,7 @@ class UploadHome extends Component {
       cancelOrderModalVisible
     } = this.state;
     const {
+      cancelOrderConfirm,
       cancelOrderhideModal,
       cancelOrdershowModal,
       handleDescriptionChange,
@@ -494,6 +501,7 @@ class UploadHome extends Component {
                 confirmOrder={handleUpload}
                 showModal={cancelOrdershowModal}
                 hideModal={cancelOrderhideModal}
+                cancelOrderConfirm={cancelOrderConfirm}
                 visible={cancelOrderModalVisible}
               />
             </Fragment>

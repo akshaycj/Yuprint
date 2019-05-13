@@ -1,7 +1,14 @@
 import React from "react";
 import { List, Card, Modal } from "antd";
 
-export default ({ fileList, confirmOrder, showModal, hideModal, visible }) => (
+export default ({
+  fileList,
+  confirmOrder,
+  showModal,
+  hideModal,
+  visible,
+  cancelOrderConfirm
+}) => (
   <div className="confirmOrder-container">
     <List
       itemLayout="horizontal"
@@ -32,7 +39,7 @@ export default ({ fileList, confirmOrder, showModal, hideModal, visible }) => (
     <Modal
       title="Cancel Order?"
       visible={visible}
-      onOk={hideModal}
+      onOk={cancelOrderConfirm}
       onCancel={hideModal}
       okText="Yes"
       cancelText="No"
