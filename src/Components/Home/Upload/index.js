@@ -46,12 +46,45 @@ class UploadHome extends Component {
       tags: [],
       inputVisible: false,
       inputValue: "",
-      type: props.type
+      type: props.type,
+      cancelOrderModalVisible: false
     };
   }
   componentDidMount() {
     //console.log("props", this.props.user);
   }
+
+  cancelOrdershowModal = () => {
+    this.setState({
+      cancelOrderModalVisible: true
+    });
+  };
+
+  cancelOrderhideModal = () => {
+    this.setState({
+      fileList: [],
+      description: "",
+      confirmOrder: false,
+      loading: false,
+      urls: [],
+      pending: 0,
+      completed: 0,
+      progress: 0,
+      onNext: false,
+      geoPosition: null,
+      address1: "",
+      address2: "",
+      asap: true,
+      scheduleTime: null,
+      scheduleDate: null,
+      uploadUrl: [],
+      title: "",
+      tags: [],
+      inputVisible: false,
+      inputValue: "",
+      cancelOrderModalVisible: false
+    });
+  };
 
   handleUpload = () => {
     var { id, fileList, completed, uploadUrl, type } = this.state;
@@ -79,9 +112,6 @@ class UploadHome extends Component {
           var progress = Math.round(
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100
           );
-
-          console.log("progress", progress);
-
           that.setState({ progress });
         },
         function(error) {
@@ -106,7 +136,31 @@ class UploadHome extends Component {
         uploadUrl.map((item, index) => {
           return item.getDownloadURL().then(function(downloadURL) {
             urls[index].url = downloadURL;
-            that.setState({ urls, completed: 0 });
+            that.setState({ urls, completed: 0 }, () => {
+              that.setState({
+                fileList: [],
+                description: "",
+                confirmOrder: false,
+                loading: false,
+                urls: [],
+                pending: 0,
+                completed: 0,
+                progress: 0,
+                onNext: false,
+                geoPosition: null,
+                address1: "",
+                address2: "",
+                asap: true,
+                scheduleTime: null,
+                scheduleDate: null,
+                uploadUrl: [],
+                title: "",
+                tags: [],
+                inputVisible: false,
+                inputValue: "",
+                cancelOrderModalVisible: false
+              });
+            });
           });
         })
       ).then(() => {
@@ -369,9 +423,12 @@ class UploadHome extends Component {
       tags,
       address1,
       address2,
-      type
+      type,
+      cancelOrderModalVisible
     } = this.state;
     const {
+      cancelOrderhideModal,
+      cancelOrdershowModal,
       handleDescriptionChange,
       handleTitleChange,
       handleTimeRadioChange,
@@ -432,7 +489,13 @@ class UploadHome extends Component {
             </Fragment>
           ) : (
             <Fragment>
-              <ConfirmOrder fileList={fileList} confirmOrder={handleUpload} />
+              <ConfirmOrder
+                fileList={fileList}
+                confirmOrder={handleUpload}
+                showModal={cancelOrdershowModal}
+                hideModal={cancelOrderhideModal}
+                visible={cancelOrderModalVisible}
+              />
             </Fragment>
           )
         ) : (

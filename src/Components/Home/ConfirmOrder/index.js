@@ -1,7 +1,7 @@
 import React from "react";
-import { List, Card } from "antd";
+import { List, Card, Modal } from "antd";
 
-export default ({ fileList, confirmOrder }) => (
+export default ({ fileList, confirmOrder, showModal, hideModal, visible }) => (
   <div className="confirmOrder-container">
     <List
       itemLayout="horizontal"
@@ -9,7 +9,6 @@ export default ({ fileList, confirmOrder }) => (
       renderItem={(item, index) => (
         <List.Item className="list-item">
           <Card title={item.name} bordered={false} style={{ width: 300 }}>
-            <p>{item.name}</p>
             <p>Pages: {item.pages}</p>
             <p>Cost per page: 1</p>
             <p>
@@ -20,7 +19,9 @@ export default ({ fileList, confirmOrder }) => (
       )}
     />
     <div className="upload-button-group">
-      <div className="upload-button cancel-button">Cancel</div>{" "}
+      <div className="upload-button cancel-button" onClick={showModal}>
+        Cancel
+      </div>{" "}
       <div
         onClick={confirmOrder}
         className="upload-button upload-button-border"
@@ -28,5 +29,15 @@ export default ({ fileList, confirmOrder }) => (
         Confirm Order
       </div>
     </div>
+    <Modal
+      title="Cancel Order?"
+      visible={visible}
+      onOk={hideModal}
+      onCancel={hideModal}
+      okText="Yes"
+      cancelText="No"
+    >
+      <p>Are you sure to cancel the order?</p>
+    </Modal>
   </div>
 );
