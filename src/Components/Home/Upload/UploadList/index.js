@@ -1,6 +1,5 @@
 import React from "react";
 import { Select, List, Icon } from "antd";
-
 const Option = Select.Option;
 
 export default ({
@@ -9,7 +8,7 @@ export default ({
   handleColorChange,
   handleSizeChange,
   handleSideChange,
-  handleDelete
+  handleDelete,
 }) => (
   <div className="list-container">
     <List

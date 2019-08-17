@@ -3,11 +3,11 @@ import { Consumer } from "../../Context/DataContext";
 import "./index.css";
 import { Spin, Input, Button } from "antd";
 import { auth, fire, db } from "../../Utils/config";
-import { Redirect } from "react-router-dom";
+import { Redirect,withRouter } from "react-router-dom";
 
 export default props => (
   <Consumer>
-    {({ user, setUser }) => <Otp {...props} user={user} setUser={setUser} />}
+    {withRouter(({ user, setUser }) => <Otp {...props} user={user} setUser={setUser} />)}
   </Consumer>
 );
 
@@ -43,6 +43,7 @@ class Otp extends Component {
 
     this.sendOTP();
   };
+
 
   onSubmit = () => {
     var code = this.state.code;
@@ -98,22 +99,25 @@ class Otp extends Component {
       });
   };
   render() {
+    
     const { spin, redirect } = this.state;
     return (
       <div className="otpMainDiv grad-back">
         <h1>Enter OTP</h1>
         <div id="recaptcha-container" />
         <Input
-          style={{ width: "90vw", height: "6.5vh" }}
+          className='otp-input'
           placeholder="Enter Otp"
           onChange={e => {
             this.setState({ code: e.target.value });
           }}
         />
+        <h4 onClick={()=>{this.props.history.push('/signup')}}  className="resend-modify" >Modify details</h4>
         <Button type="primary" onClick={this.onSubmit}>
           {spin ? <Spin /> : "Enter Otp"}
         </Button>
         {redirect ? <Redirect to="/home" /> : null}
+        <h4 onClick={()=>{this.sendOTP()}}  className="resend-modify" >Resend Otp</h4>
       </div>
     );
   }

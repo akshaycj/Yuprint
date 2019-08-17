@@ -67,10 +67,10 @@ class Signup extends Component {
           className="input"
           placeholder="Name"
           value={this.state.name}
-          prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+          prefix={<Icon type="user" className ='input-icon' />}
           suffix={
             <Tooltip title="Enter Your Name">
-              <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
+              <Icon type="info-circle" className ='input-icon' />
             </Tooltip>
           }
           onChange={this.onName}
@@ -79,10 +79,10 @@ class Signup extends Component {
           className="input"
           placeholder="Email"
           value={this.state.email}
-          prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
+          prefix={<Icon type="mail" className ='input-icon' />}
           suffix={
             <Tooltip title="Enter Your Email">
-              <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
+              <Icon type="info-circle" className ='input-icon' />
             </Tooltip>
           }
           onChange={this.onEmail}
@@ -91,10 +91,10 @@ class Signup extends Component {
           className="input"
           value={this.state.mobile}
           placeholder="Mobile Number"
-          prefix={<Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />}
+          prefix={<Icon type="phone" className ='input-icon' />}
           suffix={
             <Tooltip title="Enter Your Mobile Number">
-              <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
+              <Icon type="info-circle" className ='input-icon' />
             </Tooltip>
           }
           onChange={this.onMobile}

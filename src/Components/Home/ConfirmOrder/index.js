@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Card, Modal } from "antd";
+import { List, Card, Modal,Spin } from "antd";
 
 export default ({
   fileList,
@@ -7,10 +7,22 @@ export default ({
   showModal,
   hideModal,
   visible,
-  cancelOrderConfirm
-}) => (
+  cancelOrderConfirm,
+  erratpage,
+  loaderforPages
+}) => {
+  console.log(erratpage,loaderforPages);
+  
+  return(
   <div className="confirmOrder-container">
-    <List
+  {/* {loaderforPages ? <Spin/> :
+  <div> */}
+  {/* {erratpage ? <div>
+    <h1>Something went wrong while getting the pages </h1>
+    <h2>Please Press next to confirm your order and upload ur file</h2>
+    <h3>Ur order will be Cash on Delivery</h3> */}
+  {/* </div>: */}
+  <List
       itemLayout="horizontal"
       dataSource={fileList}
       renderItem={(item, index) => (
@@ -25,6 +37,7 @@ export default ({
         </List.Item>
       )}
     />
+    
     <div className="upload-button-group">
       <div className="upload-button cancel-button" onClick={showModal}>
         Cancel
@@ -46,5 +59,7 @@ export default ({
     >
       <p>Are you sure to cancel the order?</p>
     </Modal>
-  </div>
-);
+  </div>)}
+    // }
+  // </div>
+// )}

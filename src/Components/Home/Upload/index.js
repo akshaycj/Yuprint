@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Upload, message, Tag } from "antd";
+import { Upload, message, Tag,Spin } from "antd";
 import { Consumer } from "../../../Context/DataContext";
 import { storage, db } from "./../../../Utils/config";
 import "./index.css";
@@ -11,9 +11,8 @@ import moment from "moment";
 import PrintInstruction from "./PrintInstruction";
 import ContentUploadDescription from "./ContentUploadDescription";
 import LocationDetails from "./LocationDetails";
-import ConfirmOrder from "../ConfirmOrder";
 import { pdfjs } from "react-pdf";
-
+import OrderConfirmation from './OrderConfirmation';
 const Fragment = React.Fragment;
 
 export default props => (
@@ -47,7 +46,11 @@ class UploadHome extends Component {
       inputVisible: false,
       inputValue: "",
       type: props.type,
-      cancelOrderModalVisible: false
+      cancelOrderModalVisible: false,
+      erratpage:false,
+      loaderforPages:true,
+      on_complete:false,
+
     };
   }
   componentDidMount() {
@@ -88,14 +91,20 @@ class UploadHome extends Component {
       tags: [],
       inputVisible: false,
       inputValue: "",
-      cancelOrderModalVisible: false
+      cancelOrderModalVisible: false,
+      erratpage:false,
+      loaderforPages:true,
+      on_complete:true
+
     });
   };
 
   handleUpload = () => {
+    console.log(this.state);
+    
     var { id, fileList, completed, uploadUrl, type } = this.state;
 
-    this.setState({ loading: true, pending: fileList.length });
+    this.setState({ loading: true, pending: fileList.length,confirmOrder:true });
     const print = type === "print" ? true : false;
     let urls = [];
     const that = this;
@@ -141,37 +150,43 @@ class UploadHome extends Component {
       Promise.all(
         uploadUrl.map((item, index) => {
           return item.getDownloadURL().then(function(downloadURL) {
-            urls[index].url = downloadURL;
-            that.setState({ urls, completed: 0 }, () => {
-              that.setState({
-                fileList: [],
-                description: "",
-                confirmOrder: false,
-                loading: false,
-                urls: [],
-                pending: 0,
-                completed: 0,
-                progress: 0,
-                onNext: false,
-                geoPosition: null,
-                address1: "",
-                address2: "",
-                asap: true,
-                scheduleTime: null,
-                scheduleDate: null,
-                uploadUrl: [],
-                title: "",
-                tags: [],
-                inputVisible: false,
-                inputValue: "",
-                cancelOrderModalVisible: false
-              });
-            });
+            console.log(downloadURL);
+            that.state.urls.push(downloadURL)
+            
+            // urls[index].url = downloadURL;
+            // that.setState({ urls, completed: 0 }, () => {
+            //   that.setState({
+            //     fileList: [],
+            //     description: "",
+            //     confirmOrder: false,
+            //     loading: false,
+            //     urls: urls,
+            //     pending: 0,
+            //     completed: 0,
+            //     progress: 0,
+            //     onNext: false,
+            //     geoPosition: null,
+            //     address1: "",
+            //     address2: "",
+            //     asap: true,
+            //     scheduleTime: null,
+            //     scheduleDate: null,
+            //     uploadUrl: [],
+            //     title: "",
+            //     tags: [],
+            //     inputVisible: false,
+            //     inputValue: "",
+            //     cancelOrderModalVisible: false
+            //   });
+            // });
           });
         })
       ).then(() => {
         //console.log("urls", this.state.urls);
+        this.setState({completed:0})
         this.pushData(this.state.urls);
+        console.log(this.state.urls);
+        
       });
     });
   };
@@ -221,24 +236,34 @@ class UploadHome extends Component {
     if (print) {
       db.ref("userOrder")
         .child(id)
-        .push(printData);
-
-      db.ref("store")
+        .push(printData).then((val) =>{
+          db.ref("store")
         .child("orders")
         .child("active")
-        .push(printData, err => {
+        .child(val.key)
+        .set(printData, err => {
+          console.log(printData,err);
+          
           if (err) {
             message.error("upload failed.");
           } else {
+            this.setState({on_complete:true})
+            this.onAcceptOrder(val.key)
             message.success("upload successful");
           }
           this.onClear();
         });
+          
+        });
+
+      
     } else {
       db.ref("content")
         .child("users")
         .child("Notes")
         .push(contentData, err => {
+          ;
+          
           if (err) {
             message.error("upload failed.");
           } else {
@@ -248,6 +273,20 @@ class UploadHome extends Component {
         });
     }
   };
+  onAcceptOrder = (key) =>{
+    console.log(key);
+    
+     db.ref(`store/orders/active/${key}`).on("value",pint =>{
+      if(pint){
+        console.log(pint.val());
+        if(pint.val()){
+
+        } else{
+          this.setState({on_complete:false})
+        }
+      }
+    })
+  }
 
   onClear = () => {
     this.setState({
@@ -256,7 +295,9 @@ class UploadHome extends Component {
       description: "",
       onNext: false,
       title: "",
-      tags: []
+      tags: [],
+      urls:[]
+      
     });
   };
   handleDelete = index => {
@@ -265,6 +306,7 @@ class UploadHome extends Component {
     this.setState({ fileList });
   };
   handleSizeChange = (value, item) => {
+    
     item.paperSize = value;
   };
   handleColorChange = (value, item) => {
@@ -294,6 +336,8 @@ class UploadHome extends Component {
     }
   };
   beforeUpload = file => {
+    console.log("i am");
+    
     let allowedExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
     let allowedMIMEType = [
       "application/pdf",
@@ -315,12 +359,42 @@ class UploadHome extends Component {
         file.paperSize = "A4";
         file.pages = numPages;
         file.color = "Black and White";
+        file.side = "Single Side"
         that.setState(state => ({
           fileList: [...state.fileList, file]
         }));
       });
+    }else if(file.type === allowedMIMEType[2]  ){
+        file.paperSize = "A4";
+        file.color = "Black and White";
+        file.side = "Single Side"
+      that.setState(state =>({fileList:[...state.fileList,file]}))
+      // fetch('https://test-yuprint.herokuapp.com/',{
+      //   method:"POST",
+      //   headers:{
+      //     'Content-Type': 'application/x-www-form-urlencoded',
+      //   },
+      //   body:file
+      // }).then(magoo =>{
+      //   return magoo.json()
+        
+      // }).then(iop =>{
+      //   if(iop){
+      //     file.pages = iop.pages
+      //     this.setState({loaderforPages:false})
+      //     console.log(iop);
+      //   }
+        
+      // }).catch(err =>{
+      //   if(err){
+      //     this.setState({loaderforPages:false,erratpage:true})
+      //     console.log(err);
+          
+      //   }
+      // })
     }
-
+    
+   
     return false;
   };
   handleDescriptionChange = e => {
@@ -430,7 +504,8 @@ class UploadHome extends Component {
       address1,
       address2,
       type,
-      cancelOrderModalVisible
+      cancelOrderModalVisible,
+      on_complete
     } = this.state;
     const {
       cancelOrderConfirm,
@@ -479,11 +554,10 @@ class UploadHome extends Component {
         icon: "book"
       }
     ];
-
+    
     return (
       <div className="home-main">
-        {confirmOrder ? (
-          loading ? (
+          {loading ? (
             <Fragment>
               <img src={loadingIcon} alt="loading" />
               <ProgressIndicator
@@ -494,20 +568,10 @@ class UploadHome extends Component {
                 }}
               />
             </Fragment>
-          ) : (
-            <Fragment>
-              <ConfirmOrder
-                fileList={fileList}
-                confirmOrder={handleUpload}
-                showModal={cancelOrdershowModal}
-                hideModal={cancelOrderhideModal}
-                cancelOrderConfirm={cancelOrderConfirm}
-                visible={cancelOrderModalVisible}
-              />
-            </Fragment>
-          )
-        ) : (
+          ) 
+        : (
           <Fragment>
+          {on_complete ? <Fragment><OrderConfirmation/></Fragment>:<Fragment>
             {fileList.length === 0 ? (
               <Upload
                 showUploadList={false}
@@ -517,7 +581,8 @@ class UploadHome extends Component {
                 <UploadButton data={print ? printData : contentData} />
               </Upload>
             ) : (
-              <Fragment>
+              
+                <Fragment>
                 {onNext ? (
                   <Fragment>
                     {print ? (
@@ -539,7 +604,7 @@ class UploadHome extends Component {
                       </div>{" "}
                       <div
                         className="upload-button upload-button-back"
-                        onClick={validateData}
+                        onClick={this.handleUpload}
                       >
                         Done
                       </div>
@@ -554,7 +619,7 @@ class UploadHome extends Component {
                         handleColorChange,
                         handleSizeChange,
                         handleSideChange,
-                        handleDelete
+                        handleDelete,
                       }}
                     />
                     {print ? (
@@ -604,10 +669,11 @@ class UploadHome extends Component {
                   </Fragment>
                 )}
               </Fragment>
-            )}
+            )}</Fragment>}
           </Fragment>
-        )}
+        )
+          }
       </div>
-    );
+    )
   }
 }
