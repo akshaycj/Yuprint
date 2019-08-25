@@ -66,6 +66,7 @@ class Otp extends Component {
         });
     }
   };
+  saveUser = () => {};
 
   saveUser = () => {
     const { email, mobile, displayName, uid } = this.props.user;
@@ -81,10 +82,12 @@ class Otp extends Component {
   };
 
   sendOTP = () => {
+    console.log("sent");
+
     var phoneNumber = this.state.mobile;
     var appVerifier = window.recaptchaVerifier;
-    auth
-      .signInWithPhoneNumber(phoneNumber, appVerifier)
+    auth.currentUser
+      .linkWithPhoneNumber(phoneNumber, appVerifier)
       .then(function(confirmationResult) {
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
@@ -100,20 +103,21 @@ class Otp extends Component {
   render() {
     const { spin, redirect } = this.state;
     return (
-      <div className="otpMainDiv grad-back">
-        <h1>Enter OTP</h1>
-        <div id="recaptcha-container" />
-        <Input
-          style={{ width: "90vw", height: "6.5vh" }}
-          placeholder="Enter Otp"
-          onChange={e => {
-            this.setState({ code: e.target.value });
-          }}
-        />
-        <Button type="primary" onClick={this.onSubmit}>
-          {spin ? <Spin /> : "Enter Otp"}
-        </Button>
-        {redirect ? <Redirect to="/home" /> : null}
+      <div className="otpParent grad-back">
+        <div className="otpMainDiv">
+          <h1>Enter OTP</h1>
+          <div id="recaptcha-container" />
+          <Input
+            placeholder="Enter Otp"
+            onChange={e => {
+              this.setState({ code: e.target.value });
+            }}
+          />
+          <Button type="primary" onClick={this.onSubmit}>
+            {spin ? <Spin /> : "Enter Otp"}
+          </Button>
+          {redirect ? <Redirect to="/home" /> : null}
+        </div>
       </div>
     );
   }
