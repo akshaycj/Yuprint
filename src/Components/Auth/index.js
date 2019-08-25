@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component } from "react";
 import "./index.css";
 import { Icon, Spin } from "antd";
 import { provider, auth, db } from "./../../Utils/config";
@@ -31,7 +31,8 @@ export class Auth extends Component {
         this.handleUserData(user);
       }
     });
-    if (localStorage.getItem("sign") === "1") {
+    if (window.sessionStorage.getItem("pending")) {
+      window.sessionStorage.removeItem("pending");
       this.setState({ loading: true });
       auth.getRedirectResult().then(result => {
         if (result.user) {
@@ -64,15 +65,18 @@ export class Auth extends Component {
       //rafi edited
       // if (user.email !== null) {
       this.props.setUser(user);
-      localStorage.setItem("sign", "0");
+      //localStorage.setItem("sign", "0");
 
       this.userExist(user.uid);
     }
   };
 
   onSignIn = () => {
-    auth.signInWithRedirect(provider);
-    localStorage.setItem("sign", "1");
+    auth.signInWithRedirect(provider).catch(() => {
+      window.sessionStorage.removeItem("pending");
+    });
+    //localStorage.setItem("sign", "1");
+    window.sessionStorage.setItem("pending", 1);
   };
 
   render() {

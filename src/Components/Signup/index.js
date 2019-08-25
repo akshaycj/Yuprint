@@ -22,12 +22,13 @@ class Signup extends Component {
     };
   }
   componentDidMount() {
-    console.log("props", this.props.user);
-
-    this.setState({
-      name: this.props.user.displayName,
-      email: this.props.user.email
-    });
+    var user = this.props.user;
+    if (user) {
+      this.setState({
+        name: this.props.user.displayName,
+        email: this.props.user.email
+      });
+    }
   }
 
   onName = e => {
@@ -63,45 +64,47 @@ class Signup extends Component {
         <img src={logo} alt="logo" style={{ marginBottom: 45 }} />
         {this.state.redirect ? <Redirect to="/otp" /> : null}
 
-        <Input
-          className="input"
-          placeholder="Name"
-          value={this.state.name}
-          prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-          suffix={
-            <Tooltip title="Enter Your Name">
-              <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
-            </Tooltip>
-          }
-          onChange={this.onName}
-        />
-        <Input
-          className="input"
-          placeholder="Email"
-          value={this.state.email}
-          prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
-          suffix={
-            <Tooltip title="Enter Your Email">
-              <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
-            </Tooltip>
-          }
-          onChange={this.onEmail}
-        />
-        <Input
-          className="input"
-          value={this.state.mobile}
-          placeholder="Mobile Number"
-          prefix={<Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />}
-          suffix={
-            <Tooltip title="Enter Your Mobile Number">
-              <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
-            </Tooltip>
-          }
-          onChange={this.onMobile}
-        />
-        <Button type="primary" onClick={this.onSignUp}>
-          Sign Up
-        </Button>
+        <div className="subDiv">
+          <Input
+            className="input"
+            placeholder="Name"
+            value={this.state.name}
+            prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+            suffix={
+              <Tooltip title="Enter Your Name">
+                <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
+              </Tooltip>
+            }
+            onChange={this.onName}
+          />
+          <Input
+            className="input"
+            placeholder="Email"
+            value={this.state.email}
+            prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
+            suffix={
+              <Tooltip title="Enter Your Email">
+                <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
+              </Tooltip>
+            }
+            onChange={this.onEmail}
+          />
+          <Input
+            className="input"
+            value={this.state.mobile}
+            placeholder="Mobile Number"
+            prefix={<Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />}
+            suffix={
+              <Tooltip title="Enter Your Mobile Number">
+                <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />
+              </Tooltip>
+            }
+            onChange={this.onMobile}
+          />
+          <Button type="primary" onClick={this.onSignUp}>
+            Sign Up
+          </Button>
+        </div>
       </div>
     );
   }
