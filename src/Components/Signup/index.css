@@ -22,6 +22,9 @@
 .subDiv > .input > .ant-input {
   border-radius: 20px;
 }
+.subDiv > .input > .ant-input {
+  border-radius: 20px;
+}
 .subDiv > .ant-btn-primary {
   width: 180px;
   height: 40px;

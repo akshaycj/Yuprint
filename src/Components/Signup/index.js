@@ -17,7 +17,7 @@ class Signup extends Component {
     this.state = {
       name: "",
       email: "",
-      mobile: "",
+      mobile: "+91",
       redirect: false
     };
   }
@@ -51,7 +51,7 @@ class Signup extends Component {
 
   onSignUp = () => {
     let user = this.props.user;
-    user["mobile"] = "+91" + this.state.mobile;
+    user["mobile"] = this.state.mobile;
     this.props.setUser(user);
     this.setState({
       redirect: true
@@ -93,7 +93,6 @@ class Signup extends Component {
             className="input"
             value={this.state.mobile}
             placeholder="Mobile Number"
-            prefix={<Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />}
             suffix={
               <Tooltip title="Enter Your Mobile Number">
                 <Icon type="info-circle" style={{ color: "rgba(0,0,0,.45)" }} />

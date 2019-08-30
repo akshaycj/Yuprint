@@ -15,7 +15,7 @@ class Otp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mobile: "+917012232634",
+      mobile: "",
       code: "",
       redirect: false,
       spin: false
@@ -36,12 +36,12 @@ class Otp extends Component {
         callback: function(response) {
           console.log("ivide2");
           // reCAPTCHA solved, allow signInWithPhoneNumber.
-          self.sendOTP();
+          self.sendOTP("self");
         }
       }
     );
 
-    this.sendOTP();
+    this.sendOTP("this");
   };
 
   onSubmit = () => {
@@ -66,7 +66,7 @@ class Otp extends Component {
         });
     }
   };
-  saveUser = () => {};
+  //saveUser = () => {};
 
   saveUser = () => {
     const { email, mobile, displayName, uid } = this.props.user;
@@ -81,8 +81,8 @@ class Otp extends Component {
     this.setState({ redirect: true });
   };
 
-  sendOTP = () => {
-    console.log("sent");
+  sendOTP = from => {
+    console.log("sent", from);
 
     var phoneNumber = this.state.mobile;
     var appVerifier = window.recaptchaVerifier;
